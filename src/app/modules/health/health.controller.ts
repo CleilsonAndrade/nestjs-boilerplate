@@ -1,4 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import {
   DiskHealthIndicator,
   HealthCheckService,
@@ -7,6 +9,8 @@ import {
 } from '@nestjs/terminus';
 import { PrismaOrmHealthIndicator } from './prisma.health.service';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('health')
 export class HealthController {
   constructor(
@@ -14,7 +18,7 @@ export class HealthController {
     private readonly memory: MemoryHealthIndicator,
     private readonly disk: DiskHealthIndicator,
     private readonly db: PrismaOrmHealthIndicator,
-  ) { }
+  ) {}
 
   /**
    * The function checks the health of various components including the database, memory, and storage.

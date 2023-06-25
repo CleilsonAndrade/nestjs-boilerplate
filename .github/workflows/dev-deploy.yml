@@ -5,7 +5,7 @@ on:
     branches: [dev]
 jobs:
   deploy:
-    runs-on: [self-hosted,dev,doc-issuer-dev]
+    runs-on: [self-hosted, dev, doc-issuer-dev]
     environment:
       name: development
       url: ''
@@ -27,7 +27,7 @@ jobs:
 
       - name: yarn install
         run: yarn install --frozen-lockfile
-        
+
       - name: 'Create env file'
         run: |
           echo '${{ secrets.DEV_ENV_FILE }}' > .env

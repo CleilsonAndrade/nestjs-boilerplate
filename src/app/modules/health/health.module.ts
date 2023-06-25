@@ -9,4 +9,4 @@ import { PrismaOrmHealthIndicator } from './prisma.health.service';
   controllers: [HealthController],
   providers: [PrismaOrmHealthIndicator, PrismaService],
 })
-export class HealthModule { }
+export class HealthModule {}
