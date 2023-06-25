@@ -1,0 +1,44 @@
+name: PROD-DEPLOY
+
+on:
+  push:
+    branches: [main]
+jobs:
+  main-deploy:
+    runs-on:
+      group: Default
+      labels: [self-hosted, Linux, x64]
+    environment:
+      name: production
+      url: ''
+    strategy:
+      matrix:
+        node-version: [lts/*]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: install yarn
+        run: npm i -g yarn
+
+      - name: yarn install
+        run: yarn install --frozen-lockfile
+
+      - name: 'Create env file'
+        run: |
+          echo '${{ secrets.PROD_ENV_FILE }}' > .env
+
+      - name: prisma generate
+        run: yarn gen
+
+      - name: prisma migrate
+        run: yarn prisma migrate deploy
+
+      - name: build
+        run: yarn build
+
+      - name: start or reload server
+        run: pm2 startOrGracefulReload ecosystem.config.js

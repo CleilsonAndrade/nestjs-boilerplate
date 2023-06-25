@@ -1,0 +1,48 @@
+name: DEV-DEPLOY
+
+on:
+  push:
+    branches: [dev]
+jobs:
+  deploy:
+    runs-on: [self-hosted,dev,doc-issuer-dev]
+    environment:
+      name: development
+      url: ''
+    strategy:
+      matrix:
+        node-version: [lts/*]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: install yarn
+        run: npm i -g yarn
+
+      - name: install nest cli
+        run: npm i -g @nestjs/cli
+
+      - name: yarn install
+        run: yarn install --frozen-lockfile
+        
+      - name: 'Create env file'
+        run: |
+          echo '${{ secrets.DEV_ENV_FILE }}' > .env
+
+      - name: format
+        run: yarn format
+
+      - name: lint
+        run: yarn lint
+
+      - name: prisma generate
+        run: yarn gen
+
+      - name: build
+        run: yarn build
+
+      - name: start or reload server
+        run: pm2 startOrGracefulReload ecosystem.config.js

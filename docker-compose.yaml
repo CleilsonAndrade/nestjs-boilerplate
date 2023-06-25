@@ -1,0 +1,13 @@
+services:
+  cache:
+    container_name: redis
+    image: redis:latest
+    command: redis-server --save 20 1 --loglevel warning --requirepass R3d1s@*2023#
+    volumes:
+      - cache:/data
+    restart: always
+    ports:
+      - '6379:6379'
+volumes:
+  cache:
+    driver: local
