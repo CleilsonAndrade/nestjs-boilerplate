@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { BadRequestException, Injectable } from '@nestjs/common';
-// import { PrismaService } from '../../db/prisma/prisma.service';
 import type { CreateUserDto } from './dto/create-user.dto';
 import type { UpdateUserDto } from './dto/update-user.dto';
+// import { PrismaService } from 'src/app/database/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
+  // constructor(private readonly prismaService: PrismaService){}
+
   create(_createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
