@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   DiskHealthIndicator,
   HealthCheckService,
@@ -28,6 +28,12 @@ export class HealthController {
    * storage. The health.check() method will return a Promise that resolves with an array of objects
    * representing the results of each check
    */
+
+  @ApiOperation({
+    summary:
+      'The function checks the health of various components including the database, memory, and storage.',
+  })
+  @ApiResponse({ status: 201, description: 'OK' })
   @Get()
   async check(): Promise<HealthCheckResult> {
     return await this.health.check([
