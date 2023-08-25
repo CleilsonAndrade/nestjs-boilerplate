@@ -20,14 +20,6 @@ module.exports = {
       },
     ],
     '@typescript-eslint/strict-boolean-expressions': 0,
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': [
-      'warn', // or "error"
-      {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        caughtErrorsIgnorePattern: '^_',
-      },
-    ],
   },
+  ignorePatterns: ['prisma/seed.ts'],
 };

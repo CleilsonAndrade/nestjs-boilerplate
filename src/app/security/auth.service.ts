@@ -1,22 +1,26 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from '../database/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prismaServiceEX: PrismaService) {}
 
-  async validateUser(userId: number): Promise<number> {
+  async validateUser(userId: number): Promise<any> {
     try {
-      const user = await this.prisma.user.findFirst({
-        where: { id: userId },
-        select: { id: true },
+      const user = await this.prismaServiceEX.u_user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          username: true,
+        },
       });
 
       if (!user) {
         throw new Error('Not validated user');
       }
 
-      return user.id;
+      return user;
     } catch (error: any) {
       throw new BadRequestException(error.message);
     }

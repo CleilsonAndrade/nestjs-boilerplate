@@ -1,0 +1,30 @@
+name: Revert Commit
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'Hash of the commit to be reverted'
+        required: true
+
+jobs:
+  revert-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "${{ github.actor }}"
+
+      - name: Revert Commit
+        run: git revert --no-edit ${{ github.event.inputs.commit_hash }}
+
+      - name: Push changes
+        run: |
+          git push origin ${{ github.ref }}

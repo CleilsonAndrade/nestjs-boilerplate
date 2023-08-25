@@ -1,0 +1,29 @@
+name: Reset Commit
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'Hash of the commit to be reverted'
+        required: true
+
+jobs:
+  reset-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fetch commit
+        run: git fetch origin ${{ github.event.inputs.commit_hash }}
+
+      - name: Update the branch
+        run: git pull
+
+      - name: Reset Commit
+        env:
+          ROLLBACK_TOKEN: ${{ secrets.ROLLBACK_TOKEN }}
+        run: |
+          git reset ${{ github.event.inputs.commit_hash }}
+          git push --force origin ${{ github.ref }}

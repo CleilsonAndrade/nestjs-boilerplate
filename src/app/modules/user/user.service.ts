@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { BadRequestException, Injectable } from '@nestjs/common';
 import type { CreateUserDto } from './dto/create-user.dto';
 import type { UpdateUserDto } from './dto/update-user.dto';
@@ -8,15 +7,29 @@ import type { UpdateUserDto } from './dto/update-user.dto';
 export class UserService {
   // constructor(private readonly prismaService: PrismaService){}
 
-  create(_createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(
+    _createUserDto: CreateUserDto,
+    user: Express.User | object,
+  ): Promise<any> {
+    try {
+      let username: string;
+      if ('username' in user) {
+        username = (user as { username: string }).username;
+      } else {
+        throw new Error('Invalid user');
+      }
+
+      return 'This action adds a new user' + username;
+    } catch (error: any) {
+      throw new BadRequestException(error.message);
+    }
   }
 
-  findAll() {
+  async findAll(): Promise<any> {
     return `This action returns all user`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number): Promise<any> {
     try {
       if (Number.isNaN(id)) {
         throw new Error('Please provide a valid Id');
@@ -28,7 +41,7 @@ export class UserService {
     }
   }
 
-  update(id: number, _updateUserDto: UpdateUserDto) {
+  async update(id: number, _updateUserDto: UpdateUserDto): Promise<any> {
     try {
       if (Number.isNaN(id)) {
         throw new Error('Please provide a valid Id');
@@ -40,7 +53,7 @@ export class UserService {
     }
   }
 
-  remove(id: number) {
+  async remove(id: number): Promise<any> {
     if (Number.isNaN(id)) {
       throw new BadRequestException('Please provide a valid Id');
     }

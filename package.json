@@ -4,7 +4,7 @@
   "description": "Nest-boilerplate for initial development project",
   "author": "Cleilson Andrade",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "eslint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
@@ -61,7 +61,6 @@
     "nestjs-prisma": "^0.20.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
-    "redis": "^4.6.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "tough-cookie": "^4.1.2"

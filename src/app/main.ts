@@ -23,8 +23,9 @@ async function bootstrap(): Promise<void> {
       type: 'http',
       scheme: 'bearer',
     })
-    .setTitle('NestJS Repository Pattern')
-    .setDescription('Repository for initialize the project.')
+    .setTitle('NestJS Repository Pattern - API')
+    .addTag('Default')
+    .setDescription('Repository for initialize the API project.')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
