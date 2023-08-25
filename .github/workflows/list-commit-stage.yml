@@ -1,0 +1,19 @@
+name: Commit list - STAGE
+
+on:
+  push:
+    branches:
+      - stage
+
+jobs:
+  stage-list-commits:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Joined the list
+        run: |
+          git fetch --unshallow || true
+          git log --pretty=format:"%H - %an <%ae> - %s - %ad"

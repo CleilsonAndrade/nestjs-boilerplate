@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -16,6 +18,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Request } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -28,37 +31,81 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Create User' })
-  @ApiResponse({ status: 201, description: 'OK' })
+  @ApiResponse({ status: 201, description: 'Success in creation' })
+  @ApiResponse({
+    status: 400,
+    description: 'Incorrect request, incorrect or missing information',
+  })
+  @ApiResponse({ status: 401, description: 'Not authorized access' })
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @Req() request: Request,
+  ): Promise<any> {
+    const authenticatedUser = request.user;
+
+    if (!authenticatedUser) {
+      throw new BadRequestException('Unauthenticated user');
+    }
+
+    return await this.userService.create(createUserDto, authenticatedUser);
   }
 
   @ApiOperation({ summary: 'List all Users' })
-  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 200, description: 'Success in the request' })
+  @ApiResponse({
+    status: 400,
+    description: 'Incorrect request, incorrect or missing information',
+  })
+  @ApiResponse({ status: 401, description: 'Not authorized access' })
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll(): Promise<any> {
+    return await this.userService.findAll();
   }
 
   @ApiOperation({ summary: 'Find unique User' })
-  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 200, description: 'Success in the request' })
+  @ApiResponse({
+    status: 400,
+    description: 'Incorrect request, incorrect or missing information',
+  })
+  @ApiResponse({ status: 401, description: 'Not authorized access' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<any> {
+    return await this.userService.findOne(+id);
   }
 
   @ApiOperation({ summary: 'Update informations of one unique User' })
   @ApiResponse({ status: 200, description: 'OK' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Req() request: Request,
+  ): Promise<any> {
+    const authenticatedUser = request.user;
+
+    if (!authenticatedUser) {
+      throw new BadRequestException('Unauthenticated user');
+    }
+    return await this.userService.update(+id, updateUserDto);
   }
 
   @ApiOperation({ summary: 'Disable a User' })
-  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 200, description: 'Success in the request' })
+  @ApiResponse({
+    status: 400,
+    description: 'Incorrect request, incorrect or missing information',
+  })
+  @ApiResponse({ status: 401, description: 'Not authorized access' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async remove(@Param('id') id: string, @Req() request: Request): Promise<any> {
+    const authenticatedUser = request.user;
+
+    if (!authenticatedUser) {
+      throw new BadRequestException('Unauthenticated user');
+    }
+
+    return await this.userService.remove(+id);
   }
 }
