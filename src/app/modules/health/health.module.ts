@@ -4,10 +4,11 @@ import { TerminusModule } from '@nestjs/terminus';
 import { PrismaService } from 'src/app/database/prisma/prisma.service';
 import { HealthController } from './health.controller';
 import { PrismaOrmHealthIndicator } from './prisma.health.service';
+import { TokenHealthIndicator } from './token.health.service';
 
 @Module({
   imports: [TerminusModule, HttpModule],
   controllers: [HealthController],
-  providers: [PrismaOrmHealthIndicator, PrismaService],
+  providers: [PrismaOrmHealthIndicator, PrismaService, TokenHealthIndicator],
 })
 export class HealthModule {}
