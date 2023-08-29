@@ -1,6 +1,6 @@
 services:
   mysql:
-    container_name: mysql-sorter-api
+    container_name: mysql-name-db
     image: mysql:latest
     environment:
       - MYSQL_USER=${MYSQL_USER}

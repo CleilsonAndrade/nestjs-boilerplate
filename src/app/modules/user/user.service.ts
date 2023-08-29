@@ -41,23 +41,45 @@ export class UserService {
     }
   }
 
-  async update(id: number, _updateUserDto: UpdateUserDto): Promise<any> {
+  async update(
+    id: number,
+    _updateUserDto: UpdateUserDto,
+    user: Express.User | object,
+  ): Promise<any> {
     try {
+      let username: string;
+      if ('username' in user) {
+        username = (user as { username: string }).username;
+      } else {
+        throw new Error('Invalid user');
+      }
+
       if (Number.isNaN(id)) {
         throw new Error('Please provide a valid Id');
       }
 
-      return `This action updates a #${id} user`;
+      return `This action updates a #${id} ${username}`;
     } catch (error: any) {
       throw new BadRequestException(error.message);
     }
   }
 
-  async remove(id: number): Promise<any> {
-    if (Number.isNaN(id)) {
-      throw new BadRequestException('Please provide a valid Id');
-    }
+  async remove(id: number, user: Express.User | object): Promise<any> {
+    try {
+      let username: string;
+      if ('username' in user) {
+        username = (user as { username: string }).username;
+      } else {
+        throw new Error('Invalid user');
+      }
 
-    return `This action removes a #${id} user`;
+      if (Number.isNaN(id)) {
+        throw new BadRequestException('Please provide a valid Id');
+      }
+
+      return `This action removes a #${id} ${username}`;
+    } catch (error: any) {
+      throw new BadRequestException(error.message);
+    }
   }
 }
