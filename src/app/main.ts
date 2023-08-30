@@ -25,8 +25,17 @@ async function bootstrap(): Promise<void> {
     })
     .setTitle('NestJS Repository Pattern - API')
     .addTag('Default')
-    .setDescription('Repository for initialize the API project.')
+    .setDescription('Project repository description')
+    .setExternalDoc('Documetation NestJs', 'https://docs.nestjs.com/')
     .setVersion('1.0')
+    .setContact(
+      'Support',
+      'https://enterprise.nestjs.com/',
+      'support@nestjs.com',
+    )
+    .setTermsOfService(
+      `https://raw.githubusercontent.com/nestjs/nest/master/LICENSE`,
+    )
     .addBearerAuth()
     .build();
 
