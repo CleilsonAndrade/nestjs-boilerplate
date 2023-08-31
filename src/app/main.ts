@@ -5,6 +5,7 @@ import {
   type NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as fs from 'fs';
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
@@ -18,6 +19,8 @@ async function bootstrap(): Promise<void> {
     new ValidationPipe({ whitelist: true, forbidUnknownValues: false }),
   );
 
+  const descriptionHTML = fs.readFileSync('path_to_file_html', 'utf-8');
+
   const config = new DocumentBuilder()
     .addSecurity('bearer', {
       type: 'http',
@@ -25,7 +28,7 @@ async function bootstrap(): Promise<void> {
     })
     .setTitle('NestJS Repository Pattern - API')
     .addTag('Default')
-    .setDescription('Project repository description')
+    .setDescription(descriptionHTML)
     .setExternalDoc('Documetation NestJs', 'https://docs.nestjs.com/')
     .setVersion('1.0')
     .setContact(
@@ -40,6 +43,7 @@ async function bootstrap(): Promise<void> {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
