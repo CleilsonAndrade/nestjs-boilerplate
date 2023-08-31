@@ -1,19 +1,6 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/return-await */
-
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { BadRequestException, Controller, Get } from '@nestjs/common';
+// import { AuthGuard } from '@nestjs/passport';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   DiskHealthIndicator,
   HealthCheckService,
@@ -21,10 +8,11 @@ import {
   MemoryHealthIndicator,
 } from '@nestjs/terminus';
 import { PrismaOrmHealthIndicator } from './prisma.health.service';
+import { TokenHealthIndicator } from './token.health.service';
 
 @ApiTags('Default')
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard('jwt'))
 @Controller('health')
 export class HealthController {
   constructor(
@@ -32,6 +20,7 @@ export class HealthController {
     private readonly memory: MemoryHealthIndicator,
     private readonly disk: DiskHealthIndicator,
     private readonly db: PrismaOrmHealthIndicator,
+    private readonly token: TokenHealthIndicator,
     private readonly http: HttpHealthIndicator,
   ) {}
 
@@ -63,6 +52,8 @@ export class HealthController {
         async () => await this.http.pingCheck('NestJs', 'https://nestjs.com/'),
 
         async () => await this.db.pingCheck('name_db'),
+
+        async () => await this.token.checkTokenServiceHealth(),
 
         async () =>
           await this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   BadRequestException,
   Body,
@@ -75,7 +74,7 @@ export class UserController {
     return await this.userService.findOne(+id);
   }
 
-  @ApiOperation({ summary: 'Update informations of one unique User' })
+  @ApiOperation({ summary: "Update information's of one unique User" })
   @ApiResponse({ status: 200, description: 'OK' })
   @Patch(':id')
   async update(
@@ -88,7 +87,7 @@ export class UserController {
     if (!authenticatedUser) {
       throw new BadRequestException('Unauthenticated user');
     }
-    return await this.userService.update(+id, updateUserDto);
+    return await this.userService.update(+id, updateUserDto, authenticatedUser);
   }
 
   @ApiOperation({ summary: 'Disable a User' })
@@ -106,6 +105,6 @@ export class UserController {
       throw new BadRequestException('Unauthenticated user');
     }
 
-    return await this.userService.remove(+id);
+    return await this.userService.remove(+id, authenticatedUser);
   }
 }
