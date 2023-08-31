@@ -4,7 +4,11 @@ import {
   FastifyAdapter,
   type NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  SwaggerModule,
+  type SwaggerCustomOptions,
+} from '@nestjs/swagger';
 import * as fs from 'fs';
 import { AppModule } from './app.module';
 
@@ -21,13 +25,17 @@ async function bootstrap(): Promise<void> {
 
   const descriptionHTML = fs.readFileSync('path_to_file_html', 'utf-8');
 
+  const options: SwaggerCustomOptions = {
+    customSiteTitle: 'NestJS Boilerplate - API Documentation',
+  };
+
   const config = new DocumentBuilder()
     .addSecurity('bearer', {
       type: 'http',
       scheme: 'bearer',
     })
     .setTitle('NestJS Repository Pattern - API')
-    .addTag('Default')
+    .addTag('Default', 'Standard module for grouping endpoints')
     .setDescription(descriptionHTML)
     .setExternalDoc('Documetation NestJs', 'https://docs.nestjs.com/')
     .setVersion('1.0')
@@ -44,7 +52,7 @@ async function bootstrap(): Promise<void> {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, document, options);
 
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
   console.log(`[🤖]: Application is running on: ${await app.getUrl()}`);
