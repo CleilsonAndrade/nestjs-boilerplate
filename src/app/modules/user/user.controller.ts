@@ -142,7 +142,11 @@ export class UserController {
     return await this.userService.findAll();
   }
 
-  @ApiOperation({ summary: 'Find unique User' })
+  @ApiOperation({
+    summary: 'Find unique User',
+    description:
+      '- Function that queries a registered user based on their identifier',
+  })
   @ApiResponse({
     status: 200,
     description: 'Success in the request',
@@ -191,7 +195,11 @@ export class UserController {
     return await this.userService.findOne(+id);
   }
 
-  @ApiOperation({ summary: "Update information's of one unique User" })
+  @ApiOperation({
+    summary: "Update information's of one unique User",
+    description:
+      "- Function that is responsible for updating some data in the user's registration",
+  })
   @ApiResponse({
     status: 200,
     description: 'OK',
@@ -249,7 +257,11 @@ export class UserController {
     return await this.userService.update(+id, updateUserDto, authenticatedUser);
   }
 
-  @ApiOperation({ summary: 'Disable a User' })
+  @ApiOperation({
+    summary: 'Disable a User',
+    description:
+      "- Function responsible for deactivating a user's registration",
+  })
   @ApiResponse({
     status: 200,
     description: 'Success in the request',
