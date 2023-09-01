@@ -4,11 +4,7 @@ import {
   FastifyAdapter,
   type NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import {
-  DocumentBuilder,
-  SwaggerModule,
-  type SwaggerCustomOptions,
-} from '@nestjs/swagger';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
 import path from 'path';
 import { AppModule } from './app.module';
@@ -29,9 +25,24 @@ async function bootstrap(): Promise<void> {
     'utf-8',
   );
 
-  const options: SwaggerCustomOptions = {
-    customSiteTitle: 'NestJS Boilerplate - API Documentation',
-  };
+  let options;
+
+  if (process.env.NODE_ENVIRONMENT === 'production') {
+    options = {
+      swaggerOptions: {
+        supportedSubmitMethods: [],
+      },
+      customSiteTitle: 'NestJS - API Swagger UI',
+    };
+  } else if (process.env.NODE_ENVIRONMENT === 'development') {
+    options = {
+      customSiteTitle: 'NestJS - API Swagger UI',
+    };
+  } else {
+    throw new Error(
+      'Please set the environment to use: production or development',
+    );
+  }
 
   const config = new DocumentBuilder()
     .addSecurity('bearer', {
