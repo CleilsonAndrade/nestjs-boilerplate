@@ -8,8 +8,3505 @@ datasource db {
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model c_customer {
+  id                       Int       @id @default(autoincrement())
+  code                     String    @unique(map: "index_code") @db.VarChar(64)
+  username                 String    @unique(map: "index_username") @db.VarChar(64)
+  password                 String    @db.VarChar(64)
+  customer_alias           String?   @db.VarChar(64)
+  level                    Int?      @default(0)
+  parent_id                Int?      @default(0)
+  integral                 Int?      @default(0)
+  source                   String    @default("corporation") @db.VarChar(16)
+  company                  String?   @db.VarChar(64)
+  address                  String?   @db.VarChar(128)
+  identity_card            String?   @db.VarChar(64)
+  identity_card_attachment String?   @db.VarChar(2000)
+  co_principal_name        String?   @db.VarChar(64)
+  co_principal_tel         String?   @db.VarChar(64)
+  co_principal_phone       String?   @db.VarChar(64)
+  co_principal_qq          String?   @db.VarChar(64)
+  co_principal_email       String?   @db.VarChar(64)
+  logistics_contacts_name  String?   @db.VarChar(64)
+  logistics_contacts_tel   String?   @db.VarChar(64)
+  logistics_contacts_phone String?   @db.VarChar(64)
+  logistics_contacts_qq    String?   @db.VarChar(64)
+  logistics_contacts_email String?   @db.VarChar(64)
+  finance_contacts_name    String?   @db.VarChar(64)
+  finance_contacts_tel     String?   @db.VarChar(64)
+  finance_contacts_phone   String?   @db.VarChar(64)
+  finance_contacts_qq      String?   @db.VarChar(64)
+  finance_contacts_email   String?   @db.VarChar(64)
+  custom_service_user_id   Int?
+  lock_state               Int?      @default(0)
+  audit_state              Int?      @default(0)
+  account_status           Int?      @default(0)
+  balance                  Decimal?  @db.Decimal(12, 4)
+  initial_credit_limit     Decimal?  @db.Decimal(10, 4)
+  out_cumulative_fee       Decimal?  @db.Decimal(12, 4)
+  last_collection_date     DateTime? @db.DateTime(0)
+  payment_cycle            Int?      @default(0)
+  create_time              DateTime? @db.DateTime(0)
+  create_user              Int?
+  update_time              DateTime? @db.DateTime(0)
+  update_user              Int?
+  version                  Int?      @default(0)
+  deleted                  Int?      @default(0)
+  authorization_code       String?   @db.Text
+  handler_name             String?   @db.VarChar(50)
+  handler_id               Int?
+  site_id                  BigInt?
+  last_login_time          DateTime? @db.DateTime(0)
+  order_total_number       Int?      @default(0)
+  customer_phone           String?   @db.VarChar(64)
+  customer_email           String?   @db.VarChar(64)
+  package_deviation        Decimal?  @db.Decimal(10, 3)
+  is_out_balance_verify    Boolean   @db.Bit(1)
+  received_total_amount    Decimal   @db.Decimal(14, 2)
+  input_cumulative_fee     Decimal   @default(0.00) @db.Decimal(14, 2)
+  unsettled_amount         Decimal   @default(0.00) @db.Decimal(14, 2)
+
+  @@index([audit_state], map: "c_customer_audit_state_index")
+  @@index([company], map: "c_customer_company_index")
+  @@index([create_time], map: "c_customer_create_time_index")
+  @@index([create_user], map: "c_customer_create_user_index")
+  @@index([customer_alias], map: "c_customer_customer_alias_index")
+  @@index([deleted], map: "c_customer_deleted_index")
+  @@index([lock_state], map: "c_customer_lock_state_index")
+  @@index([site_id], map: "c_customer_site_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model c_customer_merchant {
+  id              BigInt    @id @default(autoincrement())
+  customer_id     BigInt
+  merchant_code   String    @db.VarChar(255)
+  merchant_name   String    @default("") @db.VarChar(255)
+  contact_phone   String?   @db.VarChar(64)
+  contact_address String?   @db.Text
+  merchant_email  String?   @db.VarChar(64)
+  enabled_flag    Int       @default(0)
+  create_time     DateTime? @db.DateTime(0)
+  update_time     DateTime? @db.DateTime(0)
+  create_user     String?   @db.VarChar(255)
+  update_user     String?   @db.VarChar(255)
+  deleted         Int       @default(0)
+  version         Int       @default(0)
+
+  @@unique([customer_id, merchant_code], map: "c_customer_merchant_customer_id_merchant_code_index")
+  @@index([create_time], map: "c_customer_merchant_create_time_index")
+  @@index([create_user], map: "c_customer_merchant_create_user_index")
+  @@index([customer_id], map: "c_customer_merchant_customer_id_index")
+  @@index([deleted], map: "c_customer_merchant_deleted_index")
+  @@index([enabled_flag], map: "c_customer_merchant_enabled_flag_index")
+  @@index([merchant_code], map: "c_customer_merchant_merchant_code_index")
+  @@index([merchant_name], map: "c_customer_merchant_merchant_name_index")
+  @@index([update_time], map: "c_customer_merchant_update_time_index")
+  @@index([update_user], map: "c_customer_merchant_update_user_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_bill_order {
+  id                    BigInt    @id @default(autoincrement())
+  customer_name         String    @db.VarChar(255)
+  customer_order_number String?   @db.VarChar(255)
+  delivery_number       String    @db.VarChar(255)
+  locus_push_time       DateTime? @db.DateTime(0)
+  cost_type             Int       @default(0)
+  cost_weight           Decimal?  @db.Decimal(10, 3)
+  cost                  Decimal?  @db.Decimal(10, 2)
+  push_status           Int       @default(0)
+  push_count            Int       @default(0)
+  check_repeat          String?   @db.VarChar(255)
+  create_time           DateTime? @db.DateTime(0)
+  update_time           DateTime? @db.DateTime(0)
+  create_user           Int?
+  update_user           Int?
+  version               Int       @default(0)
+  deleted               Int       @default(0)
+  order_id              Int?
+
+  @@unique([customer_name, customer_order_number, delivery_number, cost_type], map: "cl_bill_order_name_order_number_delivery_number_index")
+  @@index([cost_type], map: "cl_bill_order_cost_type_index")
+  @@index([create_time], map: "cl_bill_order_create_time_index")
+  @@index([create_user], map: "cl_bill_order_create_user_index")
+  @@index([customer_name], map: "cl_bill_order_customer_name_index")
+  @@index([customer_order_number], map: "cl_bill_order_customer_order_number_index")
+  @@index([deleted], map: "cl_bill_order_deleted_index")
+  @@index([delivery_number], map: "cl_bill_order_delivery_number_index")
+  @@index([locus_push_time], map: "cl_bill_order_locus_push_time_index")
+  @@index([order_id, cost_type], map: "cl_bill_order_order_id_cost_type_index")
+  @@index([push_count], map: "cl_bill_order_push_count_index")
+  @@index([update_time], map: "cl_bill_order_update_time_index")
+  @@index([update_user], map: "cl_bill_order_update_user_index")
+  @@index([version], map: "cl_bill_order_version_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_cost_calculation {
+  id                  Int       @id @default(autoincrement())
+  customer_id         Int
+  area_name           Json?
+  collect_site        Json?
+  belong_to_site_id   Int?
+  business_type       Int?
+  charge_pattern      Int?
+  minimum_charge      Decimal?  @db.Decimal(10, 4)
+  enable_flag         Int       @default(0)
+  start_time          DateTime? @db.DateTime(0)
+  end_time            DateTime? @db.DateTime(0)
+  calculation_formula Json?
+  remark              String?   @db.VarChar(2555)
+  create_time         DateTime? @db.DateTime(0)
+  create_user         Int?
+  update_time         DateTime? @db.DateTime(0)
+  update_user         Int?
+  version             Int       @default(0)
+  deleted             Int       @default(0)
+
+  @@index([belong_to_site_id], map: "cl_collect_cost_calculation_belong_to_site_id_index")
+  @@index([business_type], map: "cl_collect_cost_calculation_business_type_index")
+  @@index([charge_pattern], map: "cl_collect_cost_calculation_charge_pattern_index")
+  @@index([create_time], map: "cl_collect_cost_calculation_create_time_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_cost_calculation_log {
+  id                  Int       @id @default(autoincrement())
+  cost_calculation_id Int
+  customer_id         Int
+  area_name           Json?
+  collect_site        Json?
+  belong_to_site_id   Int?
+  business_type       Int?
+  charge_pattern      Int?
+  minimum_charge      Decimal?  @db.Decimal(10, 4)
+  enable_flag         Int       @default(0)
+  start_time          DateTime? @db.DateTime(0)
+  end_time            DateTime? @db.DateTime(0)
+  calculation_formula Json?
+  remark              String?   @db.VarChar(2555)
+  create_time         DateTime? @db.DateTime(0)
+  create_user         Int?
+  update_time         DateTime? @db.DateTime(0)
+  update_user         Int?
+  version             Int       @default(0)
+  deleted             Int       @default(0)
+
+  @@index([belong_to_site_id], map: "cl_collect_cost_calculation_log_belong_to_site_id_index")
+  @@index([business_type], map: "cl_collect_cost_calculation_log_business_type_index")
+  @@index([charge_pattern], map: "cl_collect_cost_calculation_log_charge_pattern_index")
+  @@index([cost_calculation_id], map: "cl_collect_cost_calculation_log_cost_calculation_id_index")
+  @@index([create_time], map: "cl_collect_cost_calculation_log_create_time_index")
+  @@index([create_user], map: "cl_collect_cost_calculation_log_create_user_index")
+  @@index([customer_id], map: "cl_collect_cost_calculation_log_customer_id_index")
+  @@index([deleted], map: "cl_collect_cost_calculation_log_deleted_index")
+  @@index([enable_flag], map: "cl_collect_cost_calculation_log_enable_flag_index")
+  @@index([end_time], map: "cl_collect_cost_calculation_log_end_time_index")
+  @@index([start_time], map: "cl_collect_cost_calculation_log_start_time_index")
+  @@index([version], map: "cl_collect_cost_calculation_log_version_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_count_reporte {
+  id               Int      @id @default(autoincrement())
+  count_date       DateTime @db.Date
+  scan_date        DateTime @db.Date
+  site_id          Int?
+  driver_id        Int?
+  scan_user_id     Int?
+  source_type      Int?
+  data_type        Int?
+  collected_count  Int?     @default(0)
+  signed_in_count  Int?     @default(0)
+  bag_sealed_count Int?     @default(0)
+  unsigned_count   Int?     @default(0)
+  create_time      DateTime @default(now()) @db.DateTime(0)
+  create_user      Int?
+  update_time      DateTime @default(now()) @db.DateTime(0)
+  update_user      Int?
+  version          Int      @default(0)
+  deleted          Int      @default(0)
+
+  @@index([count_date], map: "cl_collect_count_reporte_count_date_index")
+  @@index([create_time], map: "cl_collect_count_reporte_create_time_index")
+  @@index([data_type], map: "cl_collect_count_reporte_data_type_index")
+  @@index([deleted], map: "cl_collect_count_reporte_deleted_index")
+  @@index([driver_id], map: "cl_collect_count_reporte_driver_id_index")
+  @@index([scan_date], map: "cl_collect_count_reporte_scan_date_index")
+  @@index([scan_user_id], map: "cl_collect_count_reporte_scan_user_id_index")
+  @@index([site_id], map: "cl_collect_count_reporte_site_id_index")
+  @@index([source_type], map: "cl_collect_count_reporte_source_type_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_count_reporte_detailed {
+  id             Int       @id @default(autoincrement())
+  order_number   String?   @db.VarChar(255)
+  scan_number    String?   @db.VarChar(255)
+  driver_id      Int?
+  scan_user_id   Int?
+  scan_time      DateTime? @db.DateTime(0)
+  site_id        Int?
+  source_type    Int?
+  signer_user    Int?
+  signer_site_id Int?
+  signer_time    DateTime? @db.DateTime(0)
+  collect_status Int?
+  data_type      Int?
+  create_time    DateTime? @default(now()) @db.DateTime(0)
+  create_user    Int?
+  update_time    DateTime? @default(now()) @db.DateTime(0)
+  update_user    Int?
+  version        Int?      @default(0)
+  deleted        Int?      @default(0)
+
+  @@index([collect_status], map: "cl_collect_count_reporte_detailed_collect_status_index")
+  @@index([create_time], map: "cl_collect_count_reporte_detailed_create_time_index")
+  @@index([data_type], map: "cl_collect_count_reporte_detailed_data_type_index")
+  @@index([deleted], map: "cl_collect_count_reporte_detailed_deleted_index")
+  @@index([driver_id], map: "cl_collect_count_reporte_detailed_driver_id_index")
+  @@index([order_number], map: "cl_collect_count_reporte_detailed_order_number_index")
+  @@index([scan_number], map: "cl_collect_count_reporte_detailed_scan_number_index")
+  @@index([scan_time], map: "cl_collect_count_reporte_detailed_scan_time_index")
+  @@index([scan_user_id], map: "cl_collect_count_reporte_detailed_scan_user_id_index")
+  @@index([signer_site_id], map: "cl_collect_count_reporte_detailed_signer_site_id_index")
+  @@index([signer_time], map: "cl_collect_count_reporte_detailed_signer_time_index")
+  @@index([signer_user], map: "cl_collect_count_reporte_detailed_signer_user_index")
+  @@index([site_id], map: "cl_collect_count_reporte_detailed_site_id_index")
+  @@index([source_type], map: "cl_collect_count_reporte_detailed_source_type_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_list {
+  id                  BigInt    @id @default(autoincrement())
+  list_number         String    @db.VarChar(255)
+  customer_number     String?   @db.VarChar(255)
+  expect_time_quantum String    @db.VarChar(64)
+  expect_start_time   DateTime? @db.DateTime(0)
+  forecast_number     Int
+  real_number         Int?
+  signer_number       Int       @default(0)
+  scan_user_id        BigInt?
+  scan_time           DateTime? @db.DateTime(0)
+  bag_number          Int?
+  list_source         Int       @default(0)
+  list_status         Int
+  driver_id           BigInt?
+  forecast_weight     Decimal?  @db.Decimal(10, 4)
+  real_weight         Decimal?  @db.Decimal(10, 4)
+  telephone           String?   @db.VarChar(64)
+  address             String?   @db.Text
+  remark              String?   @db.Text
+  cancel_time         DateTime? @db.DateTime(0)
+  cancel_user         Int?
+  site_id             BigInt
+  sign_url            String?   @db.VarChar(255)
+  create_time         DateTime? @db.DateTime(0)
+  create_user         BigInt?
+  update_time         DateTime? @db.DateTime(0)
+  update_user         BigInt?
+  version             Int       @default(0)
+  deleted             Int       @default(0)
+  customer_id         BigInt?
+  print_count         Int       @default(0)
+  print_time          DateTime? @db.DateTime(0)
+
+  @@unique([list_number, customer_id], map: "cl_collect_list_list_number_unique_index")
+  @@index([create_time], map: "cl_collect_list_create_time_index")
+  @@index([create_user], map: "cl_collect_list_create_user_index")
+  @@index([deleted], map: "cl_collect_list_deleted_index")
+  @@index([expect_time_quantum], map: "cl_collect_list_expect_time_index")
+  @@index([list_number], map: "cl_collect_list_list_number_index")
+  @@index([list_status], map: "cl_collect_list_list_status_index")
+  @@index([site_id], map: "cl_collect_order_site_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order {
+  id                    BigInt    @unique(map: "id") @default(autoincrement())
+  customer_id           BigInt
+  customer_name         String?   @db.VarChar(255)
+  customer_number       String?   @db.VarChar(255)
+  customer_type         Int       @default(0)
+  order_number          String    @unique(map: "cl_collect_order_order_number") @db.VarChar(255)
+  site_id               BigInt?
+  driver_id             BigInt?
+  scan_number           String    @db.VarChar(255)
+  package_number        String    @db.VarChar(255)
+  bag_id                BigInt?
+  goods_number          Int?
+  collect_list_id       BigInt?
+  expect_time           DateTime  @db.DateTime(0)
+  scan_user_id          BigInt?
+  scan_time             DateTime? @db.DateTime(0)
+  bag_sealing_time      DateTime? @db.DateTime(0)
+  package_img           String?   @db.VarChar(255)
+  collect_status        Int       @default(0)
+  list_status           Int       @default(0)
+  weighing_weight       Decimal?  @db.Decimal(10, 4)
+  weight                Decimal?  @db.Decimal(10, 4)
+  length                Decimal?  @db.Decimal(10, 4)
+  width                 Decimal?  @db.Decimal(10, 4)
+  height                Decimal?  @db.Decimal(10, 4)
+  receive_name          String?   @db.VarChar(255)
+  receive_phone         String?   @db.VarChar(64)
+  receive_real_phone    String?   @db.VarChar(255)
+  receive_mobile        String?   @db.VarChar(50)
+  receive_mail          String?   @db.VarChar(64)
+  receive_zipcode       String?   @db.VarChar(64)
+  receive_state         String?   @db.VarChar(64)
+  receive_city          String?   @db.VarChar(128)
+  receive_area          String?   @db.VarChar(128)
+  receive_street        String?   @db.Text
+  receive_house_number  String?   @db.VarChar(64)
+  receive_address       String?   @db.Text
+  receive_neighborhood  String?   @db.VarChar(255)
+  receive_address_code  String?   @db.VarChar(128)
+  receive_tax           String?   @db.VarChar(255)
+  sender_name           String?   @db.VarChar(255)
+  sender_phone          String?   @db.VarChar(64)
+  sender_real_phone     String?   @db.VarChar(255)
+  sender_mobile         String?   @db.VarChar(64)
+  sender_mail           String?   @db.VarChar(64)
+  sender_zipcode        String?   @db.VarChar(64)
+  sender_state          String?   @db.VarChar(64)
+  sender_city           String?   @db.VarChar(128)
+  sender_area           String?   @db.VarChar(128)
+  sender_street         String?   @db.Text
+  sender_house_number   String?   @default("") @db.VarChar(64)
+  sender_address        String?   @db.Text
+  sender_neighborhood   String?   @db.VarChar(255)
+  sender_address_code   String?   @db.VarChar(128)
+  sender_tax            String?   @db.VarChar(255)
+  invoice_number        String?   @db.VarChar(128)
+  invoice_address       String?   @db.VarChar(1024)
+  order_source          Int       @default(0)
+  platform              Int       @default(0)
+  signer_img            String?   @db.VarChar(1000)
+  signer_time           DateTime? @db.DateTime(0)
+  signer_user           BigInt?
+  signer_site_id        BigInt?   @default(0)
+  extra                 Json?
+  create_time           DateTime  @db.DateTime(0)
+  update_time           DateTime? @db.DateTime(0)
+  create_user           Int?
+  update_user           Int?
+  version               Int       @default(0)
+  deleted               Int       @default(0)
+  finish_sign_url       String?   @db.VarChar(1000)
+  goods_name            String?   @db.VarChar(4000)
+  bag_sealing_user      BigInt?
+  goods_invoice         Int?      @db.TinyInt
+  customer_collect_type Int       @default(2)
+  collect_type          Int?
+  close_time            DateTime? @db.DateTime(0)
+
+  @@unique([customer_id, package_number], map: "cl_collect_order_customer_id_package_number_index")
+  @@unique([scan_number, customer_id], map: "cl_collect_order_scan_number_customer_id_uindex")
+  @@index([bag_id], map: "cl_collect_order_bag_id_index")
+  @@index([bag_sealing_time], map: "cl_collect_order_bag_sealing_time_index")
+  @@index([close_time], map: "cl_collect_order_close_time_index")
+  @@index([customer_type], map: "cl_collect_order_collect_customer_type_index")
+  @@index([collect_list_id], map: "cl_collect_order_collect_list_id_index")
+  @@index([collect_status], map: "cl_collect_order_collect_status_index")
+  @@index([create_time], map: "cl_collect_order_create_time_index")
+  @@index([create_user], map: "cl_collect_order_create_user_index")
+  @@index([customer_collect_type], map: "cl_collect_order_customer_collect_type_index")
+  @@index([customer_id, create_time], map: "cl_collect_order_customer_id_create_time_index")
+  @@index([customer_id, customer_number], map: "cl_collect_order_customer_id_customer_number_index")
+  @@index([customer_id, expect_time], map: "cl_collect_order_customer_id_expect_time_index")
+  @@index([customer_id], map: "cl_collect_order_customer_id_index")
+  @@index([customer_id, scan_time], map: "cl_collect_order_customer_id_scan_time_index")
+  @@index([customer_number], map: "cl_collect_order_customer_number_index")
+  @@index([platform], map: "cl_collect_order_customer_platform_index")
+  @@index([receive_real_phone], map: "cl_collect_order_customer_receive_real_phone_index")
+  @@index([sender_real_phone], map: "cl_collect_order_customer_sender_real_phone_index")
+  @@index([deleted, create_time], map: "cl_collect_order_deleted_index")
+  @@index([driver_id], map: "cl_collect_order_driver_id_index")
+  @@index([expect_time], map: "cl_collect_order_expect_time_index")
+  @@index([invoice_number], map: "cl_collect_order_invoice_number_index")
+  @@index([list_status], map: "cl_collect_order_list_status_index")
+  @@index([order_number], map: "cl_collect_order_order_number_index")
+  @@index([order_source], map: "cl_collect_order_order_source_index")
+  @@index([package_number], map: "cl_collect_order_package_number_index")
+  @@index([receive_address_code], map: "cl_collect_order_receive_address_code_index")
+  @@index([receive_area], map: "cl_collect_order_receive_area_index")
+  @@index([receive_city], map: "cl_collect_order_receive_city_index")
+  @@index([receive_mail], map: "cl_collect_order_receive_mail_index")
+  @@index([receive_mobile], map: "cl_collect_order_receive_mobile_index")
+  @@index([receive_name], map: "cl_collect_order_receive_name_index")
+  @@index([receive_phone], map: "cl_collect_order_receive_phone_index")
+  @@index([receive_state], map: "cl_collect_order_receive_state_index")
+  @@index([receive_tax], map: "cl_collect_order_receive_tax_index")
+  @@index([receive_zipcode, create_time], map: "cl_collect_order_receive_zipcode_index")
+  @@index([scan_number], map: "cl_collect_order_scan_number_index")
+  @@index([scan_time], map: "cl_collect_order_scan_time_index")
+  @@index([scan_user_id], map: "cl_collect_order_scan_user_id_index")
+  @@index([sender_address_code], map: "cl_collect_order_sender_address_code_index")
+  @@index([sender_area], map: "cl_collect_order_sender_area_index")
+  @@index([sender_city], map: "cl_collect_order_sender_city_index")
+  @@index([sender_mail], map: "cl_collect_order_sender_mail_index")
+  @@index([sender_mobile], map: "cl_collect_order_sender_mobile_index")
+  @@index([sender_name], map: "cl_collect_order_sender_name_index")
+  @@index([sender_phone], map: "cl_collect_order_sender_phone_index")
+  @@index([sender_state], map: "cl_collect_order_sender_state_index")
+  @@index([sender_tax], map: "cl_collect_order_sender_tax_index")
+  @@index([sender_zipcode], map: "cl_collect_order_sender_zipcode_index")
+  @@index([signer_time], map: "cl_collect_order_signer_time_index")
+  @@index([signer_user], map: "cl_collect_order_signer_user_index")
+  @@index([site_id, create_time], map: "cl_collect_order_site_id_create_time_index")
+  @@index([site_id], map: "cl_collect_order_site_id_index")
+  @@index([collect_status, create_time], map: "collect_status")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_bag {
+  id                BigInt    @id @default(autoincrement())
+  collect_list_id   BigInt?
+  scan_user_id      BigInt
+  delivery_id       BigInt?
+  tag_detail_number String?   @db.VarChar(255)
+  signer_img        String?   @db.VarChar(1000)
+  signer_time       DateTime? @db.DateTime(0)
+  bag_number        String    @unique(map: "cl_collect_order_bag_number_index") @db.VarChar(255)
+  scan_time         DateTime  @db.DateTime(0)
+  order_source      Int       @default(0)
+  create_time       DateTime? @db.DateTime(0)
+  update_time       DateTime? @db.DateTime(0)
+  create_user       Int?
+  update_user       Int?
+  version           Int       @default(0)
+  deleted           Int       @default(0)
+  package_count     Int
+  bag_status        Int       @default(0)
+  signer_user_id    BigInt?
+
+  @@index([bag_status], map: "cl_collect_order_bag_bag_status_index")
+  @@index([create_time], map: "cl_collect_order_bag_create_time_index")
+  @@index([create_user], map: "cl_collect_order_bag_create_user_index")
+  @@index([deleted], map: "cl_collect_order_bag_deleted_index")
+  @@index([collect_list_id], map: "cl_collect_order_collect_order_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_count_tmp {
+  id            Int       @id @default(autoincrement())
+  count_date    DateTime  @db.Date
+  create_time   DateTime? @db.Date
+  site_id       BigInt?
+  scan_user_id  BigInt?
+  customer_id   BigInt?
+  customer_name String?   @db.VarChar(255)
+  merchant_code String?   @db.VarChar(255)
+  merchant_name String?   @db.VarChar(255)
+  data          Json
+
+  @@index([count_date], map: "cl_collect_order_count_tmp_count_date_index")
+  @@index([create_time], map: "cl_collect_order_count_tmp_create_time_index")
+  @@index([customer_id], map: "cl_collect_order_count_tmp_customer_id_index")
+  @@index([merchant_code, merchant_name], map: "cl_collect_order_count_tmp_merchant_code_name_index")
+  @@index([create_time], map: "cl_collect_order_count_tmp_merchant_create_time_index")
+  @@index([scan_user_id], map: "cl_collect_order_count_tmp_scan_user_id_index")
+  @@index([site_id], map: "cl_collect_order_count_tmp_site_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_error {
+  id                         Int       @id @default(autoincrement())
+  order_id                   BigInt?
+  customer_number            String?   @db.VarChar(225)
+  provider_name              String?   @db.VarChar(225)
+  collect_status             String?   @db.VarChar(225)
+  error_reason               String?   @db.VarChar(225)
+  collect_time               String?   @db.VarChar(225)
+  warehouse_time             String?   @db.VarChar(225)
+  order_status               String?   @db.VarChar(225)
+  scan_time                  String?   @db.VarChar(225)
+  upload_time                String?   @db.VarChar(225)
+  upload_user                String?   @db.VarChar(225)
+  sign_for_scan_time         String?   @db.VarChar(225)
+  sign_for_upload_time       String?   @db.VarChar(225)
+  sign_for_upload_user       String?   @db.VarChar(225)
+  track_create_time          String?   @db.VarChar(225)
+  track_push_time            String?   @db.VarChar(225)
+  sign_for_track_create_time String?   @db.VarChar(225)
+  sign_for_track_push_time   String?   @db.VarChar(225)
+  order_number               String?   @db.VarChar(225)
+  scan_number                String?   @db.VarChar(225)
+  bag_number                 String?   @db.VarChar(225)
+  sender_city                String?   @db.VarChar(4000)
+  receive_address            String?   @db.VarChar(4000)
+  operation_type             String?   @db.VarChar(225)
+  receive_city               String?   @db.VarChar(225)
+  merchant_id                Int?
+  create_time                DateTime? @db.DateTime(0)
+  package_number             String?   @db.VarChar(225)
+  goods_value                String?   @db.VarChar(255)
+  collect_cost               Decimal?  @db.Decimal(10, 2)
+  settlement                 String?   @db.VarChar(255)
+  invoice_type               String?   @db.VarChar(255)
+
+  @@index([bag_number], map: "cl_collect_order_error_bag_number_index")
+  @@index([collect_time], map: "cl_collect_order_error_collect_time_index")
+  @@index([create_time], map: "cl_collect_order_error_create_time_index")
+  @@index([invoice_type], map: "cl_collect_order_error_invoice_type_index")
+  @@index([order_id], map: "cl_collect_order_error_order_id_index")
+  @@index([order_number], map: "cl_collect_order_error_order_number_index")
+  @@index([package_number], map: "cl_collect_order_error_package_number_index")
+  @@index([scan_number], map: "cl_collect_order_error_scan_number_index")
+  @@index([scan_time], map: "cl_collect_order_error_scan_time_index")
+  @@index([sign_for_upload_time], map: "cl_collect_order_error_sign_for_upload_time_index")
+  @@index([sign_for_upload_time], map: "cl_collect_order_error_sign_upload_time_index")
+  @@index([upload_time], map: "cl_collect_order_error_upload_time_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_goods {
+  id           BigInt    @id @default(autoincrement())
+  order_number String?   @db.VarChar(255)
+  goods_name   String?   @db.VarChar(255)
+  weight       String?   @db.VarChar(255)
+  height       String?   @db.VarChar(255)
+  length       String?   @db.VarChar(255)
+  value        String?   @db.VarChar(255)
+  total_value  String?   @db.VarChar(255)
+  create_time  DateTime? @db.DateTime(0)
+  width        String?   @db.VarChar(255)
+  total_weight Decimal?  @db.Decimal(10, 0)
+  create_user  Int?
+  update_user  Int?
+  update_time  DateTime? @db.DateTime(0)
+  version      Int?
+
+  @@index([order_number], map: "cl_collect_order_goods_order_number_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_invoice {
+  id                           BigInt    @id @default(autoincrement())
+  order_number                 String    @db.VarChar(100)
+  order_id                     BigInt?
+  goods_invoic_no              String?   @db.VarChar(128)
+  goods_invoice_secret_key     String?   @db.VarChar(512)
+  logistics_invoice_type       String?   @db.VarChar(64)
+  logistics_invoice_no         String?   @db.VarChar(128)
+  logistics_invoice_secret_key String?   @db.VarChar(512)
+  create_user                  String?   @db.VarChar(64)
+  create_time                  DateTime? @db.DateTime(0)
+  update_user                  String?   @db.VarChar(64)
+  update_time                  DateTime? @db.DateTime(0)
+  version                      Int       @default(0)
+  deleted                      Int       @default(0)
+
+  @@index([order_id], map: "cl_collect_order_invoice_order_id_index")
+  @@index([goods_invoic_no], map: "idx_goods_invoic_no")
+  @@index([order_number], map: "idx_order_number")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_merchant {
+  id            BigInt    @id @default(autoincrement())
+  order_id      BigInt    @unique(map: "cl_collect_order_merchant_order_id_index")
+  merchant_code String    @db.VarChar(255)
+  merchant_name String    @default("") @db.VarChar(255)
+  create_time   DateTime? @db.DateTime(0)
+  update_time   DateTime? @db.DateTime(0)
+  create_user   Int?
+  update_user   Int?
+
+  @@index([merchant_code], map: "cl_collect_order_merchant_merchant_code_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_problem {
+  id             BigInt    @id @default(autoincrement())
+  order_id       BigInt?   @unique(map: "cl_collect_order_problem_order_id_uindex")
+  package_number String?   @db.VarChar(225)
+  problem_type   String?   @db.VarChar(64)
+  problem_reason String?   @db.VarChar(225)
+  create_user    Int?
+  create_time    DateTime? @db.DateTime(0)
+  update_user    Int?
+  update_time    DateTime? @db.DateTime(0)
+  version        Int       @default(0)
+  deleted        Int       @default(0)
+  problem_img    String?   @db.VarChar(255)
+  problem_source Int       @default(0)
+  driver_id      Int?
+
+  @@index([create_time], map: "cl_collect_order_problem_create_time_index")
+  @@index([create_user], map: "cl_collect_order_problem_create_user_index")
+  @@index([deleted], map: "cl_collect_order_problem_deleted_index")
+  @@index([package_number], map: "cl_collect_order_problem_package_number_index")
+  @@index([problem_source], map: "cl_collect_order_problem_problem_source_index")
+  @@index([problem_type], map: "cl_collect_order_problem_problem_type_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_scan_record {
+  id               BigInt    @id @default(autoincrement())
+  scan_number      String?   @db.VarChar(255)
+  bag_number       String?   @db.VarChar(255)
+  driver_id        BigInt?
+  scan_user_id     Int?
+  customer_id      BigInt?
+  sign_img         String?   @db.Text
+  sign_photo       String?   @db.Text
+  weight           Decimal?  @db.Decimal(10, 4)
+  operation_type   Int?
+  successed        Int       @default(1)
+  track_push_state Int?      @default(0)
+  source_type      Int       @default(0)
+  upload_state     Int       @default(0)
+  scan_count       Int       @default(1)
+  scan_time        DateTime  @default(now()) @db.DateTime(0)
+  deleted          Int       @default(0)
+  upload_time      DateTime? @db.DateTime(0)
+  order_id         Int?
+  pda_code         String?   @db.VarChar(255)
+  site_id          Int?
+
+  @@index([deleted, successed, operation_type, scan_time], map: "cl_collect_order_scan_query_index")
+  @@index([bag_number], map: "cl_collect_order_scan_record_bag_number_index")
+  @@index([customer_id], map: "cl_collect_order_scan_record_customer_id_index")
+  @@index([scan_user_id, scan_time], map: "cl_collect_order_scan_record_group__index")
+  @@index([order_id], map: "cl_collect_order_scan_record_order_id_index")
+  @@index([pda_code], map: "cl_collect_order_scan_record_pda_code_index")
+  @@index([scan_number], map: "cl_collect_order_scan_record_scan_number_index")
+  @@index([scan_time], map: "cl_collect_order_scan_record_scan_time_index")
+  @@index([scan_user_id], map: "cl_collect_order_scan_record_scan_user_id_index")
+  @@index([upload_state], map: "cl_collect_order_scan_record_upload_state_index")
+  @@index([upload_time], map: "cl_collect_order_scan_record_upload_time_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_track {
+  id                  BigInt    @id @default(autoincrement())
+  order_number        String?   @db.VarChar(255)
+  customer_number     String?   @db.VarChar(255)
+  address             String?   @db.VarChar(255)
+  date                String?   @db.VarChar(255)
+  state_code          String?   @db.VarChar(255)
+  provider_state_code String?   @db.VarChar(255)
+  remark              String?   @db.VarChar(255)
+  source_from         String?   @db.VarChar(255)
+  push_time           DateTime? @db.DateTime(0)
+  create_time         DateTime  @db.DateTime(0)
+  create_user         String?   @db.VarChar(255)
+  update_time         DateTime? @db.DateTime(0)
+  update_user         String?   @db.VarChar(255)
+  version             Int       @default(0)
+  deleted             Int       @default(0)
+  delivered           Int?      @default(0)
+  package_number      String?   @db.VarChar(255)
+  order_id            Int
+  fail_count          Int?
+
+  @@index([order_number], map: "cl_track_order_number_idx")
+  @@index([update_time], map: "cl_track_update_time_idx")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_order_vehicle_scan {
+  id             BigInt    @id @default(autoincrement())
+  car_tag        String?   @db.VarChar(255)
+  vehicle_id     String?   @db.VarChar(255)
+  bag_number     String?   @db.VarChar(255)
+  driver_id      BigInt?
+  successed      Int       @default(1)
+  operation_type Int       @default(0)
+  upload_state   Int       @default(0)
+  scan_count     Int       @default(1)
+  scan_time      DateTime  @default(now()) @db.DateTime(0)
+  deleted        Int       @default(0)
+  upload_time    DateTime? @db.DateTime(0)
+
+  @@index([bag_number], map: "cl_collect_order_bag_vehicle_scan_record_bag_number_index")
+  @@index([deleted], map: "cl_collect_order_bag_vehicle_scan_record_deleted_index")
+  @@index([driver_id], map: "cl_collect_order_bag_vehicle_scan_record_driver_id_index")
+  @@index([operation_type], map: "cl_collect_order_bag_vehicle_scan_record_operation_type_index")
+  @@index([scan_time], map: "cl_collect_order_bag_vehicle_scan_record_scan_time_index")
+  @@index([successed], map: "cl_collect_order_bag_vehicle_scan_record_successed_index")
+  @@index([upload_state], map: "cl_collect_order_bag_vehicle_scan_record_upload_state_index")
+  @@index([upload_time], map: "cl_collect_order_bag_vehicle_scan_record_upload_time_index")
+  @@index([vehicle_id], map: "cl_collect_order_bag_vehicle_scan_record_vehicle_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_push_batch_track {
+  id          Int       @id @default(autoincrement())
+  image_url   String?   @db.Text
+  scan_time   DateTime? @db.DateTime(0)
+  push_status Int       @default(0)
+  source      Int       @default(0)
+  create_time DateTime? @db.DateTime(0)
+  create_user Int?
+  update_time DateTime? @db.DateTime(0)
+  update_user Int?
+  version     Int       @default(0)
+  deleted     Int       @default(0)
+
+  @@index([create_time], map: "cl_collect_push_batch_track_create_time_index")
+  @@index([deleted], map: "cl_collect_push_batch_track_deleted_index")
+  @@index([push_status], map: "cl_collect_push_batch_track_push_status_index")
+  @@index([scan_time], map: "cl_collect_push_batch_track_scan_time_index")
+  @@index([source], map: "cl_collect_push_batch_track_source_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_push_batch_track_datail {
+  id             Int       @id @default(autoincrement())
+  batch_track_id Int
+  order_id       Int?
+  package_number String?   @db.VarChar(255)
+  source         Int       @default(0)
+  create_time    DateTime? @db.DateTime(0)
+  create_user    Int?
+  update_time    DateTime? @db.DateTime(0)
+  update_user    Int?
+  version        Int       @default(0)
+  deleted        Int       @default(0)
+
+  @@index([batch_track_id], map: "cl_collect_push_batch_track_datail_batch_track_id_index")
+  @@index([create_time], map: "cl_collect_push_batch_track_datail_create_time_index")
+  @@index([deleted], map: "cl_collect_push_batch_track_datail_deleted_index")
+  @@index([order_id], map: "cl_collect_push_batch_track_datail_order_id_index")
+  @@index([package_number], map: "cl_collect_push_batch_track_datail_package_number_index")
+  @@index([source], map: "cl_collect_push_batch_track_datail_source_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_tag_number {
+  id          BigInt    @id @default(autoincrement())
+  site_id     Int
+  print_qty   Int?
+  print_url   String?   @db.VarChar(1000)
+  print_time  DateTime? @db.DateTime(0)
+  create_time DateTime  @default(now()) @db.DateTime(0)
+  create_user Int?
+  update_time DateTime  @default(now()) @db.DateTime(0)
+  update_user Int?
+  version     Int       @default(0)
+  deleted     Int       @default(0)
+
+  @@index([create_time], map: "cl_coolect_tag_number_create_time_index")
+  @@index([create_user], map: "cl_coolect_tag_number_create_user_index")
+  @@index([deleted], map: "cl_coolect_tag_number_deleted_index")
+  @@index([site_id], map: "cl_coolect_tag_number_site_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_tag_number_datail {
+  id            BigInt    @id @default(autoincrement())
+  tag_number_id Int
+  tag_number    String?   @db.VarChar(64)
+  vehicle_id    String?   @db.VarChar(255)
+  vehicle_state String?   @db.VarChar(255)
+  loaded_time   DateTime? @db.DateTime(0)
+  loaded_user   BigInt?
+  unload_time   DateTime? @db.DateTime(0)
+  unload_user   BigInt?
+  create_time   DateTime  @default(now()) @db.DateTime(0)
+  create_user   Int?
+  update_time   DateTime  @default(now()) @db.DateTime(0)
+  update_user   Int?
+  version       Int       @default(0)
+  deleted       Int       @default(0)
+
+  @@index([loaded_user], map: "cl_coolect_tag_number_detail_cl_coolect_tag_number_detail_index")
+  @@index([create_time], map: "cl_coolect_tag_number_detail_create_time_index")
+  @@index([create_user], map: "cl_coolect_tag_number_detail_create_user_index")
+  @@index([deleted], map: "cl_coolect_tag_number_detail_deleted_index")
+  @@index([loaded_time], map: "cl_coolect_tag_number_detail_loaded_time_index")
+  @@index([tag_number_id], map: "cl_coolect_tag_number_detail_tag_number_id_index")
+  @@index([tag_number], map: "cl_coolect_tag_number_detail_tag_number_index")
+  @@index([unload_time], map: "cl_coolect_tag_number_detail_unload_time_index")
+  @@index([unload_user], map: "cl_coolect_tag_number_detail_unload_user_index")
+  @@index([vehicle_id], map: "cl_coolect_tag_number_detail_vehicle_id_index")
+  @@index([vehicle_state], map: "cl_coolect_tag_number_detail_vehicle_state_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_track_update_log {
+  id                    Int       @id @default(autoincrement())
+  order_id              Int?
+  scan_time_update      DateTime? @db.DateTime(0)
+  scan_user_id_update   Int?
+  site_id_update        Int?
+  finish_sign_url       String?   @db.Text
+  signer_time_update    DateTime? @db.DateTime(0)
+  signer_user_update    Int?
+  signer_site_id_update Int?
+  signer_img_update     String?   @db.Text
+  create_user           Int?
+  create_time           DateTime? @db.DateTime(0)
+  update_user           Int?
+  update_time           DateTime? @db.DateTime(0)
+  version               Int?      @default(0)
+  deleted               Int?      @default(0)
+
+  @@index([create_time], map: "cl_collect_track_log_create_time_index")
+  @@index([deleted], map: "cl_collect_track_log_deleted_index")
+  @@index([order_id], map: "cl_collect_track_log_order_id_index")
+  @@index([version], map: "cl_collect_track_log_version_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_collect_vehicle {
+  id                             BigInt    @id @default(autoincrement())
+  vehicle_number                 String    @db.VarChar(64)
+  vehicle_name                   String    @db.VarChar(64)
+  vehicle_type                   Int
+  site_id                        Int
+  vehicle_driver                 String?   @db.VarChar(64)
+  operation_mode                 Int
+  vehicle_service_life           String?   @db.VarChar(100)
+  itin                           String?   @db.VarChar(100)
+  drivers_license_number         String?   @db.VarChar(100)
+  drivers_license_type           String    @db.VarChar(255)
+  drivers_license_limited_period String?   @db.VarChar(100)
+  drivers_license_issuing_agency String?   @db.Text
+  enabled                        Int       @default(0)
+  remark                         String?   @db.VarChar(255)
+  create_user                    Int?
+  create_time                    DateTime  @db.DateTime(0)
+  update_user                    Int?
+  update_time                    DateTime? @db.DateTime(0)
+  version                        Int       @default(0)
+  deleted                        Int       @default(0)
+
+  @@index([create_time], map: "cl_collect_vehicle_create_time_index")
+  @@index([create_user], map: "cl_collect_vehicle_create_user_index")
+  @@index([deleted], map: "cl_collect_vehicle_deleted_index")
+  @@index([operation_mode], map: "cl_collect_vehicle_operation_mode_index")
+  @@index([site_id], map: "cl_collect_vehicle_site_id_index")
+  @@index([vehicle_driver], map: "cl_collect_vehicle_vehicle_driver_index")
+  @@index([vehicle_name], map: "cl_collect_vehicle_vehicle_name_index")
+  @@index([vehicle_number], map: "cl_collect_vehicle_vehicle_number_index")
+  @@index([vehicle_type], map: "cl_collect_vehicle_vehicle_type_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_internal_api_request {
+  id              Int       @id @default(autoincrement())
+  biz_id          String    @db.VarChar(255)
+  request_url     String    @db.VarChar(255)
+  is_requestor    Int?      @db.TinyInt
+  request_params  Json?
+  response_params Json?
+  error_msg       String?   @db.VarChar(2000)
+  create_time     DateTime? @db.DateTime(0)
+  update_time     DateTime? @db.DateTime(0)
+  create_user     Int?
+  update_user     Int?
+  version         Int       @default(0)
+  deleted         Int       @default(0)
+
+  @@index([biz_id], map: "cl_internal_api_request_biz_id_index")
+  @@index([is_requestor], map: "cl_internal_api_request_is_requestor_index")
+  @@index([request_url], map: "cl_internal_api_request_request_url_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_order_scan_time {
+  id                        Int       @id @default(autoincrement())
+  order_id                  Int       @unique(map: "cl_order_scan_time_order_id_uindex")
+  collect_scan_time         DateTime  @default(now()) @db.DateTime(0)
+  collect_time              DateTime? @db.DateTime(0)
+  sign_scan_time            DateTime? @db.DateTime(0)
+  sign_time                 DateTime? @db.DateTime(0)
+  site_id                   Int?
+  source_type               Int       @default(0)
+  create_time               DateTime  @default(now()) @db.DateTime(0)
+  create_user               Int?
+  update_time               DateTime? @db.DateTime(0)
+  update_user               Int?
+  version                   Int       @default(0)
+  deleted                   Int       @default(0)
+  collect_track_create_time DateTime? @db.DateTime(0)
+  collect_track_push_time   DateTime? @db.DateTime(0)
+  sign_track_create_time    DateTime? @db.DateTime(0)
+  sign_track_push_time      DateTime? @db.DateTime(0)
+  loaded_time               DateTime? @db.DateTime(0)
+  unload_time               DateTime? @db.DateTime(0)
+
+  @@index([collect_scan_time], map: "cl_order_scan_time_collect_scan_time_index")
+  @@index([collect_time], map: "cl_order_scan_time_collect_time_index")
+  @@index([create_time], map: "cl_order_scan_time_create_time_index")
+  @@index([deleted], map: "cl_order_scan_time_deleted_index")
+  @@index([sign_scan_time], map: "cl_order_scan_time_sign_scan_time_index")
+  @@index([sign_time], map: "cl_order_scan_time_sign_time_index")
+  @@index([site_id], map: "cl_order_scan_time_site_id_index")
+  @@index([source_type], map: "cl_order_scan_time_source_type_index")
+  @@index([version], map: "cl_order_scan_time_version_index")
+}
+
+model cl_replace_bag_log {
+  bag_id         BigInt
+  old_number_bag String   @db.VarChar(255)
+  new_number_bag String   @db.VarChar(255)
+  user_id        BigInt
+  create_time    DateTime @db.DateTime(0)
+  id             BigInt   @id @default(autoincrement())
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_stock_order_scan {
+  id              BigInt    @id @default(autoincrement())
+  waybill_number  String?   @db.VarChar(255)
+  customer_number String?   @db.VarChar(255)
+  actual_weight   Decimal?  @db.Decimal(10, 4)
+  scan_user_id    Int?
+  scan_type       Int?      @default(0)
+  successed       Int       @default(1)
+  source_type     Int       @default(0)
+  upload_state    Int       @default(0)
+  scan_count      Int       @default(1)
+  scan_time       DateTime  @default(now()) @db.DateTime(0)
+  deleted         Int       @default(0)
+  upload_time     DateTime? @db.DateTime(0)
+
+  @@index([actual_weight], map: "cl_stock_order_scan_actual_weight_index")
+  @@index([deleted], map: "cl_stock_order_scan_deleted_index")
+  @@index([scan_time], map: "cl_stock_order_scan_scan_time_index")
+  @@index([scan_user_id], map: "cl_stock_order_scan_signer_site_id_index")
+  @@index([source_type], map: "cl_stock_order_scan_source_type_index")
+  @@index([successed], map: "cl_stock_order_scan_successed_index")
+  @@index([upload_state], map: "cl_stock_order_scan_upload_state_index")
+  @@index([upload_time], map: "cl_stock_order_scan_upload_time_index")
+  @@index([waybill_number], map: "cl_stock_order_scan_waybill_number_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_stock_scan_record_temp {
+  id               BigInt    @id @default(autoincrement())
+  scan_number      String?   @db.VarChar(255)
+  driver_id        BigInt?
+  customer_name    String?   @db.VarChar(255)
+  sign_img         String?   @db.Text
+  sign_photo       String?   @db.Text
+  weight           Decimal?  @db.Decimal(10, 4)
+  operation_type   Int?      @default(0)
+  successed        Int       @default(1)
+  track_push_state Int?      @default(0)
+  source_type      Int       @default(0)
+  scan_time        DateTime  @default(now()) @db.DateTime(0)
+  upload_state     Int       @default(0)
+  upload_time      DateTime? @db.DateTime(0)
+  deleted          Int       @default(0)
+
+  @@index([deleted], map: "cl_collect_order_scan_record_deleted_index")
+  @@index([upload_state], map: "cl_collect_order_scan_record_upload_state_index")
+  @@index([upload_time], map: "cl_collect_order_scan_record_upload_time_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_stock_sub_order {
+  id                    BigInt    @id @default(autoincrement())
+  customer_sub_number   String?   @db.VarChar(255)
+  master_waybill_number String?   @db.VarChar(255)
+  sign_bath_no          String?   @db.VarChar(640)
+  batch_no              String?   @db.VarChar(640)
+  sub_order_state       Int?      @default(0)
+  weight                Decimal?  @db.Decimal(10, 3)
+  actual_weight         Decimal?  @default(0.000) @db.Decimal(10, 3)
+  collect_user          Int?
+  collect_time          DateTime? @db.DateTime(0)
+  collect_sign_img      String?   @db.Text
+  collect_photo         String?   @db.Text
+  collect_site_id       Int?
+  dispatch_user         String?   @db.VarChar(255)
+  dispatch_time         DateTime? @db.DateTime(0)
+  dispatch_sign_img     String?   @db.VarChar(500)
+  dispatch_photo        String?   @db.VarChar(500)
+  dispatch_sign_site    Int?
+  create_time           DateTime? @db.DateTime(0)
+  update_time           DateTime? @db.DateTime(0)
+  create_user           Int?
+  update_user           Int?
+  version               Int       @default(0)
+  deleted               Int       @default(0)
+
+  @@index([actual_weight], map: "cl_stock_sub_order_actual_weight_index")
+  @@index([collect_time], map: "cl_stock_sub_order_collect_time_index")
+  @@index([collect_user], map: "cl_stock_sub_order_collect_user_index")
+  @@index([create_time], map: "cl_stock_sub_order_create_time_index")
+  @@index([create_user], map: "cl_stock_sub_order_create_user_index")
+  @@index([deleted], map: "cl_stock_sub_order_deleted_index")
+  @@index([dispatch_time], map: "cl_stock_sub_order_dispatch_time_index")
+  @@index([dispatch_user], map: "cl_stock_sub_order_dispatch_user_index")
+  @@index([sub_order_state], map: "cl_stock_sub_order_sub_order_state_index")
+  @@index([update_time], map: "cl_stock_sub_order_update_time_index")
+  @@index([update_user], map: "cl_stock_sub_order_update_user_index")
+  @@index([version], map: "cl_stock_sub_order_version_index")
+  @@index([weight], map: "cl_stock_sub_order_weight_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_zip_code_division {
+  id             Int       @id @default(autoincrement())
+  two_code       String?   @db.VarChar(2)
+  city           String?   @db.VarChar(255)
+  extra          String?   @db.VarChar(1024)
+  start_zip_code String?   @db.VarChar(255)
+  end_zip_code   String?   @db.VarChar(255)
+  area_name      String?   @db.VarChar(255)
+  create_time    DateTime? @db.DateTime(0)
+  create_user    Int?
+  update_time    DateTime? @db.DateTime(0)
+  update_user    Int?
+  version        Int       @default(0)
+  deleted        Int       @default(0)
+
+  @@index([area_name], map: "cl_zip_code_division_area_name_index")
+  @@index([create_time], map: "cl_zip_code_division_create_time_index")
+  @@index([create_user], map: "cl_zip_code_division_create_user_index")
+  @@index([deleted], map: "cl_zip_code_division_deleted_index")
+  @@index([end_zip_code], map: "cl_zip_code_division_end_zip_code_index")
+  @@index([start_zip_code], map: "cl_zip_code_division_start_zip_code_index")
+  @@index([two_code], map: "cl_zip_code_division_two_code_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cl_zip_code_division_area {
+  id          Int       @id @default(autoincrement())
+  area_name   String?   @db.VarChar(255)
+  mail_area   Json?
+  create_time DateTime? @db.DateTime(0)
+  create_user Int?
+  update_time DateTime? @db.DateTime(0)
+  update_user Int?
+  version     Int       @default(0)
+  deleted     Int       @default(0)
+
+  @@index([area_name], map: "cl_zip_code_division_area_area_name_index")
+  @@index([create_time], map: "cl_zip_code_division_area_create_time_index")
+  @@index([create_user], map: "cl_zip_code_division_area_create_user_index")
+  @@index([deleted], map: "cl_zip_code_division_area_deleted_index")
+  @@index([version], map: "cl_zip_code_division_area_version_index")
+}
+
+model cte_cl {
+  id             Int      @id @default(autoincrement())
+  package_number String   @db.VarChar(50)
+  cte_key        String   @db.VarChar(100)
+  create_time    DateTime @default(now()) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_account {
+  id             Int       @id @default(autoincrement())
+  account_alias  String    @unique(map: "uni_account_alias") @db.VarChar(125)
+  status         Int?
+  bank           String    @db.VarChar(64)
+  account_number String    @unique(map: "uni_account_number") @db.VarChar(128)
+  account_name   String    @db.VarChar(255)
+  remark         String?   @db.VarChar(255)
+  create_time    DateTime? @db.DateTime(0)
+  create_user    Int?
+  update_time    DateTime? @db.DateTime(0)
+  update_user    Int?
+  version        Int       @default(0)
+  deleted        Int       @default(0)
+
+  @@index([account_name], map: "idx_account_name")
+  @@index([status], map: "idx_status")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_customer_bill {
+  id                BigInt    @id @default(autoincrement())
+  bill_batch_number String    @unique(map: "fa_customer_bill_bill_batch_number_unikey") @db.VarChar(128)
+  receipt_number    String?   @db.VarChar(128)
+  bill_name         String    @db.VarChar(128)
+  customer_id       Int
+  site_id           Int
+  order_qty         Int
+  waybill_qty       Int
+  fee_qty           Int
+  charge_weight     Decimal   @default(0.0000) @db.Decimal(10, 4)
+  total_receivable  Decimal   @default(0.00) @db.Decimal(11, 2)
+  actual_fee        Decimal   @default(0.00) @db.Decimal(11, 2)
+  audit_status      Int       @default(0)
+  is_accept         Boolean   @default(dbgenerated("b'0'")) @db.Bit(1)
+  audit_user_id     Int?
+  audit_user_name   String?   @db.VarChar(255)
+  audit_time        DateTime? @db.DateTime(0)
+  audit_remark      String?   @db.VarChar(255)
+  accept_user_id    Int?
+  accept_user_name  String?   @db.VarChar(255)
+  accept_time       DateTime? @db.DateTime(0)
+  accept_remark     String?   @db.VarChar(255)
+  create_user       Int
+  create_time       DateTime  @db.DateTime(0)
+  update_user       Int?
+  update_time       DateTime? @db.DateTime(0)
+  deleted           Int       @default(0)
+  version           Int       @default(0)
+
+  @@index([audit_status], map: "fa_customer_bill_audit_status_index")
+  @@index([bill_batch_number], map: "fa_customer_bill_bill_batch_number_index")
+  @@index([is_accept], map: "fa_customer_bill_is_accept_index")
+  @@index([receipt_number], map: "fa_customer_bill_receipt_number_index")
+  @@index([site_id], map: "fa_customer_bill_site_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_customer_bill_confirm {
+  id                BigInt    @id
+  bill_batch_number String    @db.VarChar(255)
+  bill_name         String    @db.VarChar(255)
+  status            Int       @default(0)
+  site_id           Int
+  waybill_qty       Int       @default(0)
+  fee_qty           Int       @default(0)
+  charge_weight     Decimal   @default(0.0000) @db.Decimal(10, 4)
+  total_fee         Decimal   @default(0.00) @db.Decimal(11, 2)
+  create_user       Int?
+  create_time       DateTime? @db.DateTime(0)
+  audit_user        Int?
+  audit_time        DateTime? @db.DateTime(0)
+  remark            String?   @db.Text
+  version           Int       @default(0)
+  delete            Int       @default(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_customer_expense {
+  id              BigInt    @id @default(autoincrement())
+  waybill_number  String    @db.VarChar(255)
+  order_number    String    @db.VarChar(255)
+  customer_number String    @db.VarChar(255)
+  site_id         Int
+  customer_id     Int
+  input_time      DateTime  @db.DateTime(0)
+  collect_weight  Decimal   @default(0.0000) @db.Decimal(10, 4)
+  charge_weight   Decimal   @default(0.0000) @db.Decimal(10, 4)
+  fee_qty         Int       @default(0)
+  total_fee       Decimal   @default(0.00) @db.Decimal(11, 2)
+  remark          String?   @db.Text
+  create_time     DateTime  @db.DateTime(0)
+  create_user     Int
+  update_time     DateTime? @db.DateTime(0)
+  update_user     Int?      @default(0)
+  version         Int       @default(0)
+
+  @@index([create_time], map: "fa_customer_expense_create_time")
+  @@index([customer_id], map: "fa_customer_expense_customer_id")
+  @@index([customer_number], map: "fa_customer_expense_customer_number")
+  @@index([input_time], map: "fa_customer_expense_input_time")
+  @@index([order_number], map: "fa_customer_expense_order_number")
+  @@index([site_id], map: "fa_customer_expense_site_id")
+  @@index([waybill_number], map: "fa_customer_expense_waybill_number")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_customer_expense_sub {
+  id                BigInt    @id @default(autoincrement())
+  waybill_number    String    @db.VarChar(255)
+  order_number      String    @db.VarChar(255)
+  customer_number   String    @db.VarChar(255)
+  site_id           Int
+  customer_id       Int
+  fee_code          String    @db.VarChar(64)
+  fee               Decimal   @default(0.00) @db.Decimal(11, 2)
+  input_time        DateTime  @db.DateTime(0)
+  operate_time      DateTime  @db.DateTime(0)
+  is_gen_bill       Boolean   @default(dbgenerated("b'0'")) @db.Bit(1)
+  is_paid           Boolean   @default(dbgenerated("b'0'")) @db.Bit(1)
+  bill_batch_number String?   @db.VarChar(255)
+  receipt_number    String?   @db.VarChar(128)
+  remark            String?   @db.Text
+  fee_source        Int       @default(0)
+  create_user       Int?
+  create_time       DateTime  @db.DateTime(0)
+  update_time       DateTime? @db.DateTime(0)
+  update_user       Int?      @default(0)
+  version           Int       @default(0)
+
+  @@index([bill_batch_number], map: "fa_customer_expense_sub_bill_batch_number_index")
+  @@index([customer_id], map: "fa_customer_expense_sub_customer_id_index")
+  @@index([customer_number], map: "fa_customer_expense_sub_customer_number_index")
+  @@index([fee_code], map: "fa_customer_expense_sub_fee_code_index")
+  @@index([fee_source], map: "fa_customer_expense_sub_fee_source_index")
+  @@index([input_time], map: "fa_customer_expense_sub_input_time_index")
+  @@index([is_gen_bill], map: "fa_customer_expense_sub_is_gen_bill_index")
+  @@index([is_paid], map: "fa_customer_expense_sub_is_paid_index")
+  @@index([operate_time], map: "fa_customer_expense_sub_operate_time_index")
+  @@index([order_number], map: "fa_customer_expense_sub_order_number_index")
+  @@index([receipt_number], map: "fa_customer_expense_sub_receipt_number_index")
+  @@index([site_id], map: "fa_customer_expense_sub_site_id_index")
+  @@index([waybill_number], map: "fa_customer_expense_sub_waybill_number_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_customer_receipt {
+  id                BigInt    @id @default(autoincrement())
+  receipt_number    String    @unique(map: "fa_customer_bill_bill_batch_number_unikey") @db.VarChar(128)
+  receipt_bill_name String?   @db.VarChar(255)
+  ticket_number     String?   @db.VarChar(128)
+  parent_id         Int       @default(0)
+  is_parent         Boolean   @default(dbgenerated("b'0'")) @db.Bit(1)
+  receipt_status    Int       @default(0)
+  is_accept         Boolean?  @default(dbgenerated("b'0'")) @db.Bit(1)
+  customer_id       Int
+  site_id           Int?
+  order_qty         Int
+  waybill_qty       Int
+  fee_qty           Int
+  actual_fee        Decimal   @default(0.00) @db.Decimal(14, 2)
+  receipt_type      Int
+  before_balance    Decimal?  @default(0.00) @db.Decimal(14, 2)
+  after_balance     Decimal?  @default(0.00) @db.Decimal(14, 2)
+  charge_weight     Decimal   @default(0.0000) @db.Decimal(10, 4)
+  bill_fee          Decimal   @default(0.00) @db.Decimal(14, 2)
+  receipt_method    String?   @db.VarChar(255)
+  attachment_url    String?   @db.Text
+  audit_user_id     Int?
+  audit_time        DateTime? @db.DateTime(0)
+  account_alias     String?   @db.VarChar(255)
+  accept_user_id    Int?
+  accept_time       DateTime? @db.DateTime(0)
+  create_user       Int
+  create_time       DateTime  @db.DateTime(0)
+  update_user       Int?
+  update_time       DateTime? @db.DateTime(0)
+  remark            String?   @db.VarChar(255)
+  version           Int       @default(0)
+  deleted           Int       @default(0)
+
+  @@index([customer_id], map: "fa_customer_bill_customer_id_index")
+  @@index([is_accept], map: "fa_customer_bill_is_accept_index")
+  @@index([receipt_status], map: "fa_customer_bill_receipt_status_index")
+  @@index([receipt_type], map: "fa_customer_bill_receipt_type_index")
+  @@index([site_id], map: "fa_customer_bill_site_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_fee_type {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique(map: "fa_fee_type_code_uindex") @db.VarChar(6)
+  serial_no   Int      @unique(map: "fa_fee_type_serial_no_uindex")
+  name        String   @unique(map: "fa_fee_type_name_uindex") @db.VarChar(64)
+  name_pu     String?  @unique(map: "fa_fee_type_name_pu_uindex") @db.VarChar(128)
+  attribute   Int      @default(1)
+  is_sys      Boolean  @default(dbgenerated("b'0'")) @db.Bit(1)
+  state       Boolean  @default(dbgenerated("b'1'")) @db.Bit(1)
+  create_user Int?
+  create_time DateTime @default(now()) @db.DateTime(0)
+  update_user Int?
+  update_time DateTime @default(now()) @db.DateTime(0)
+  version     Int      @default(0)
+  remark      String?  @db.VarChar(255)
+
+  @@index([create_time], map: "fa_fee_type_create_time_index")
+  @@index([state], map: "fa_fee_type_state_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_offer_price {
+  id               BigInt    @id @default(autoincrement())
+  name             String    @db.VarChar(128)
+  offer_type       Int
+  offer_attr       Int
+  provider_info_id BigInt?
+  site_id          BigInt?
+  partition_id     BigInt?
+  currency         String?   @db.VarChar(32)
+  start_time       DateTime? @db.DateTime(0)
+  end_time         DateTime? @db.DateTime(0)
+  status           Boolean?  @default(dbgenerated("b'1'")) @db.Bit(1)
+  remark           String?   @db.VarChar(256)
+  create_time      DateTime? @db.DateTime(0)
+  create_user      Int?
+  update_time      DateTime? @db.DateTime(0)
+  update_user      Int?
+  version          Int       @default(0)
+
+  @@index([end_time], map: "fa_offer_price_end_time_index")
+  @@index([name], map: "fa_offer_price_name_index")
+  @@index([offer_attr], map: "fa_offer_price_offer_attr_index")
+  @@index([offer_type], map: "fa_offer_price_offer_type_index")
+  @@index([partition_id], map: "fa_offer_price_partition_id_index")
+  @@index([provider_info_id], map: "fa_offer_price_provider_info_id_index")
+  @@index([site_id], map: "fa_offer_price_site_id_index")
+  @@index([start_time], map: "fa_offer_price_start_time_index")
+  @@index([status], map: "fa_offer_price_status_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_offer_price_detail {
+  id                      BigInt    @id @default(autoincrement())
+  offer_price_id          BigInt
+  partition_id            BigInt
+  partition_affiliate_id  BigInt
+  express_type            Int
+  fee_type_code           String?   @db.VarChar(6)
+  billing_type            Int       @db.TinyInt
+  start_weight            Decimal?  @db.Decimal(10, 4)
+  end_weight              Decimal?  @db.Decimal(10, 4)
+  price                   Decimal   @default(0.0000) @db.Decimal(10, 4)
+  over_weight_extra_price Decimal?  @db.Decimal(10, 4)
+  create_time             DateTime? @db.DateTime(0)
+  create_user             Int?
+  update_time             DateTime? @db.DateTime(0)
+  update_user             Int?
+  version                 Int       @default(0)
+
+  @@index([express_type], map: "fa_offer_price_detail_express_type_index")
+  @@index([offer_price_id], map: "fa_offer_price_detail_offer_price_id_index")
+  @@index([partition_affiliate_id], map: "fa_offer_price_detail_partition_affiliate_id_index")
+  @@index([partition_id], map: "fa_offer_price_detail_partition_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_offer_price_operate_log {
+  id                BigInt   @id @default(autoincrement())
+  ip                String?  @db.VarChar(128)
+  offer_price_id    BigInt
+  operation_content String?  @db.Text
+  extra             String?  @db.Text
+  remark            String?  @db.VarChar(255)
+  create_time       DateTime @db.DateTime(0)
+  create_user       Int
+  operator_name     String?  @db.VarChar(255)
+  version           Int      @default(0)
+  deleted           Int      @default(0)
+
+  @@index([offer_price_id], map: "fa_offer_price_operate_log_offer_price_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_offer_price_partition_affiliate {
+  id                     BigInt    @id @default(autoincrement())
+  offer_price_id         BigInt
+  partition_id           BigInt
+  partition_name         String?   @db.VarChar(64)
+  partition_affiliate_id BigInt
+  postal_code            String?   @db.Text
+  remarks                String?   @db.VarChar(255)
+  create_time            DateTime? @db.DateTime(0)
+  create_user            Int?
+  update_time            DateTime? @db.DateTime(0)
+  update_user            Int?
+  version                Int       @default(0)
+
+  @@index([offer_price_id], map: "fa_offer_price_partition_offer_price_id_index")
+  @@index([partition_affiliate_id], map: "fa_offer_price_partition_partition_affiliate_id_index")
+  @@index([partition_id], map: "fa_offer_price_partition_partition_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_partition {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique(map: "uni_name") @db.VarChar(255)
+  state       Int?
+  remark      String?   @db.VarChar(255)
+  create_time DateTime? @db.DateTime(0)
+  create_user Int?
+  update_time DateTime? @db.DateTime(0)
+  update_user Int?
+  version     Int       @default(0)
+
+  @@index([create_time], map: "idx_create_time")
+  @@index([state], map: "idx_state")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_partition_affiliate {
+  id                   BigInt    @id @default(autoincrement())
+  partition_id         BigInt
+  partition_identifier String    @db.VarChar(255)
+  postal_code          String?   @db.Text
+  create_time          DateTime? @db.DateTime(0)
+  create_user          Int?
+  update_time          DateTime? @db.DateTime(0)
+  update_user          Int?
+  version              Int       @default(0)
+
+  @@index([partition_id], map: "fa_partition_affiliate_partition_id_index")
+  @@index([partition_identifier], map: "fa_partition_affiliate_partition_identifier_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_partition_operate_log {
+  id                BigInt   @id @default(autoincrement())
+  ip                String?  @db.VarChar(128)
+  partition_id      BigInt
+  operation_content String?  @db.Text
+  extra             String?  @db.Text
+  operator_name     String?  @db.VarChar(255)
+  remark            String?  @db.VarChar(255)
+  create_user       Int
+  create_time       DateTime @db.DateTime(0)
+
+  @@index([partition_id], map: "fa_offer_price_operate_log_offer_price_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_site_bill {
+  id                BigInt    @id @default(autoincrement())
+  bill_batch_number String    @unique(map: "uni_bill_batch_number") @db.VarChar(128)
+  receipt_number    String?   @db.VarChar(128)
+  bill_name         String    @db.VarChar(128)
+  provider_id       Int
+  site_id           Int
+  order_qty         Int
+  fee_qty           Int
+  charge_weight     Decimal   @default(0.0000) @db.Decimal(10, 4)
+  total_receivable  Decimal   @default(0.00) @db.Decimal(11, 2)
+  actual_fee        Decimal   @default(0.00) @db.Decimal(11, 2)
+  is_audit          Int       @default(0)
+  is_accept         Int       @default(0)
+  create_user       Int
+  create_user_name  String    @db.VarChar(255)
+  create_time       DateTime  @db.DateTime(0)
+  audit_user_id     Int?
+  audit_user_name   String?   @db.VarChar(255)
+  audit_time        DateTime? @db.DateTime(0)
+  audit_remark      String?   @db.VarChar(255)
+  accept_user_id    Int?
+  accept_user_name  String?   @db.VarChar(255)
+  accept_time       DateTime? @db.DateTime(0)
+  accept_remark     String?   @db.VarChar(255)
+  update_time       DateTime? @db.DateTime(0)
+  update_user       Int?
+  deleted           Int       @default(0)
+  version           Int       @default(0)
+
+  @@index([accept_time], map: "idx_accept_time")
+  @@index([audit_time], map: "idx_audit_time")
+  @@index([create_time], map: "idx_create_time")
+  @@index([is_accept], map: "idx_is_accept")
+  @@index([is_audit], map: "idx_is_audit")
+  @@index([is_audit, is_accept], map: "idx_is_audit_and_is_accept")
+  @@index([provider_id], map: "idx_provider_id")
+  @@index([provider_id, site_id], map: "idx_provider_id_and_site_id")
+  @@index([receipt_number], map: "idx_receipt_number")
+  @@index([site_id], map: "idx_site_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_site_expense {
+  id              BigInt    @id @default(autoincrement())
+  waybill_number  String    @unique(map: "uni_waybill_number") @db.VarChar(255)
+  order_number    String    @db.VarChar(255)
+  customer_number String    @db.VarChar(255)
+  site_id         Int
+  provider_id     Int?
+  customer_id     Int
+  input_time      DateTime  @db.DateTime(0)
+  transfer_weight Decimal   @default(0.0000) @db.Decimal(10, 4)
+  charge_weight   Decimal   @default(0.0000) @db.Decimal(10, 4)
+  fee_qty         Int       @default(0)
+  total_fee       Decimal   @default(0.00) @db.Decimal(11, 2)
+  remark          String?   @db.Text
+  create_time     DateTime? @db.DateTime(0)
+  create_user     Int?
+  update_time     DateTime? @db.DateTime(0)
+  update_user     Int?      @default(0)
+  version         Int       @default(0)
+
+  @@index([create_time], map: "idx_create_time")
+  @@index([customer_number], map: "idx_customer_number")
+  @@index([input_time], map: "idx_input_time")
+  @@index([order_number], map: "idx_order_number")
+  @@index([order_number, customer_number], map: "idx_order_number_and_customer_number")
+  @@index([provider_id], map: "idx_provider_id")
+  @@index([provider_id, site_id], map: "idx_provider_id_and_site_id")
+  @@index([site_id], map: "idx_site_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_site_expense_sub {
+  id                BigInt    @id @default(autoincrement())
+  waybill_number    String    @db.VarChar(255)
+  order_number      String    @db.VarChar(255)
+  customer_number   String    @db.VarChar(255)
+  site_id           Int
+  customer_id       Int
+  provider_id       Int
+  fee_code          String    @db.VarChar(64)
+  fee_source        Int       @default(0)
+  is_gen_bill       Boolean   @default(dbgenerated("b'0'")) @db.Bit(1)
+  is_audit          Int       @default(0)
+  is_accept         Int       @default(0)
+  bill_batch_number String?   @db.VarChar(255)
+  receipt_number    String?   @db.VarChar(255)
+  remark            String?   @db.Text
+  operate_time      DateTime  @db.DateTime(0)
+  input_time        DateTime? @db.DateTime(0)
+  create_time       DateTime  @db.DateTime(0)
+  create_user       Int
+  update_time       DateTime? @db.DateTime(0)
+  update_user       Int?
+  version           Int       @default(0)
+  fee               Decimal   @default(0.00) @db.Decimal(11, 2)
+
+  @@index([customer_number], map: "idx_customer_number")
+  @@index([fee_code], map: "idx_fee_code")
+  @@index([is_accept], map: "idx_is_accept")
+  @@index([is_audit], map: "idx_is_audit")
+  @@index([is_audit, is_accept], map: "idx_is_audit_and_is_accept")
+  @@index([is_gen_bill], map: "idx_is_gen_bill")
+  @@index([is_gen_bill, is_accept], map: "idx_is_gen_bill_and_is_accept")
+  @@index([is_gen_bill, is_audit], map: "idx_is_gen_bill_and_is_audit")
+  @@index([is_gen_bill, is_audit, is_accept], map: "idx_is_gen_bill_and_is_audit_and_is_accept")
+  @@index([order_number], map: "idx_order_number")
+  @@index([order_number, customer_number], map: "idx_order_number_and_customer_number")
+  @@index([provider_id], map: "idx_provider_id")
+  @@index([site_id], map: "idx_site_id")
+  @@index([waybill_number], map: "idx_waybill_number")
+  @@index([waybill_number, customer_number], map: "idx_waybill_number_and_customer_number")
+  @@index([waybill_number, order_number], map: "idx_waybill_number_and_order_number")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fa_site_receipt {
+  id                Int       @id @default(autoincrement())
+  receipt_number    String    @unique(map: "uni_receipt_number") @db.VarChar(128)
+  receipt_bill_name String    @db.VarChar(255)
+  ticket_number     String?   @db.VarChar(128)
+  parent_id         Int       @default(0)
+  is_parent         Boolean   @default(dbgenerated("b'0'")) @db.Bit(1)
+  is_accept         Int
+  provider_id       Int
+  site_id           Int
+  order_qty         Int
+  fee_qty           Int
+  actual_fee        Decimal   @default(0.00) @db.Decimal(14, 2)
+  charge_weight     Decimal   @default(0.0000) @db.Decimal(10, 4)
+  bill_fee          Decimal   @default(0.00) @db.Decimal(14, 2)
+  receipt_method    String?   @db.VarChar(255)
+  attachment_url    String?   @db.Text
+  audit_user_id     Int?
+  audit_user_name   String?   @db.VarChar(128)
+  audit_time        DateTime? @db.DateTime(0)
+  account_alias     String?   @db.VarChar(255)
+  accept_user_id    Int?
+  accept_user_name  String?   @db.VarChar(255)
+  accept_time       DateTime? @db.DateTime(0)
+  create_user       Int
+  create_user_name  String    @db.VarChar(255)
+  create_time       DateTime  @db.DateTime(0)
+  remark            String?   @db.VarChar(255)
+  update_user       Int?
+  update_user_name  String?   @db.VarChar(128)
+  update_time       DateTime? @db.DateTime(0)
+  version           Int       @default(0)
+
+  @@index([accept_time], map: "idx_accept_time")
+  @@index([audit_time], map: "idx_audit_time")
+  @@index([create_time], map: "idx_create_time")
+  @@index([is_accept], map: "idx_is_accept")
+  @@index([parent_id], map: "idx_parent_id")
+  @@index([provider_id], map: "idx_provider_id")
+  @@index([provider_id, site_id], map: "idx_provider_id_and_site_id")
+  @@index([receipt_method], map: "idx_receipt_method")
+  @@index([site_id], map: "idx_site_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_alert {
+  id                 BigInt    @id @default(autoincrement())
+  target             String    @db.VarChar(255)
+  alert_define_id    BigInt?
+  priority           Int       @default(0) @db.TinyInt
+  content            String    @db.VarChar(4000)
+  status             Int       @default(0) @db.TinyInt
+  times              Int
+  first_trigger_time BigInt?
+  last_trigger_time  BigInt?
+  next_eval_interval BigInt?
+  tags               String?   @db.VarChar(4000)
+  creator            String?   @db.VarChar(100)
+  modifier           String?   @db.VarChar(100)
+  gmt_create         DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update         DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_alert_define {
+  id         BigInt    @id @default(autoincrement())
+  app        String    @db.VarChar(100)
+  metric     String    @db.VarChar(100)
+  field      String?   @db.VarChar(100)
+  preset     Boolean   @default(false)
+  expr       String?   @db.VarChar(255)
+  priority   Int       @default(0) @db.TinyInt
+  times      Int       @default(1)
+  enable     Boolean   @default(true)
+  template   String    @db.VarChar(255)
+  creator    String?   @db.VarChar(100)
+  modifier   String?   @db.VarChar(100)
+  gmt_create DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_alert_define_monitor_bind {
+  id              BigInt    @id @default(autoincrement())
+  alert_define_id BigInt
+  monitor_id      BigInt
+  gmt_create      DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update      DateTime? @default(now()) @db.DateTime(0)
+
+  @@index([alert_define_id, monitor_id], map: "index_bind")
+}
+
+model hzb_history {
+  id          BigInt  @id @default(autoincrement())
+  app         String? @db.VarChar(255)
+  dou         Float?
+  instance    String? @db.VarChar(255)
+  metric      String? @db.VarChar(255)
+  metric_type Int?    @db.TinyInt
+  metrics     String? @db.VarChar(255)
+  monitor_id  BigInt?
+  str         String? @db.VarChar(255)
+  time        BigInt?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_monitor {
+  id          BigInt    @id @default(autoincrement())
+  job_id      BigInt?
+  name        String    @db.VarChar(100)
+  app         String    @db.VarChar(100)
+  host        String    @db.VarChar(100)
+  intervals   Int       @default(600)
+  status      Int       @default(1) @db.TinyInt
+  description String?   @db.VarChar(255)
+  creator     String?   @db.VarChar(100)
+  modifier    String?   @db.VarChar(100)
+  gmt_create  DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update  DateTime? @default(now()) @db.DateTime(0)
+
+  @@index([app, host, name], map: "query_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_notice_receiver {
+  id                 BigInt    @id @default(autoincrement())
+  name               String    @db.VarChar(100)
+  type               Int       @db.TinyInt
+  phone              String?   @db.VarChar(100)
+  email              String?   @db.VarChar(100)
+  hook_url           String?   @db.VarChar(255)
+  wechat_id          String?   @db.VarChar(255)
+  access_token       String?   @db.VarChar(255)
+  tg_bot_token       String?   @db.VarChar(255)
+  tg_user_id         String?   @db.VarChar(255)
+  slack_web_hook_url String?   @db.VarChar(255)
+  corp_id            String?   @db.VarChar(255)
+  agent_id           String?   @db.VarChar(255)
+  app_secret         String?   @db.VarChar(255)
+  discord_channel_id String?   @db.VarChar(255)
+  discord_bot_token  String?   @db.VarChar(255)
+  creator            String?   @db.VarChar(100)
+  modifier           String?   @db.VarChar(100)
+  gmt_create         DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update         DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_notice_rule {
+  id            BigInt    @id @default(autoincrement())
+  name          String    @db.VarChar(100)
+  receiver_id   BigInt
+  receiver_name String    @db.VarChar(100)
+  enable        Boolean   @default(true)
+  filter_all    Boolean   @default(true)
+  priorities    String?   @db.VarChar(100)
+  tags          String?   @db.VarChar(4000)
+  days          String?   @db.VarChar(100)
+  period_start  DateTime? @default(now()) @db.Timestamp(0)
+  creator       String?   @db.VarChar(100)
+  modifier      String?   @db.VarChar(100)
+  gmt_create    DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update    DateTime? @default(now()) @db.DateTime(0)
+  period_end    DateTime? @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_param {
+  id         BigInt    @id @default(autoincrement())
+  monitor_id BigInt
+  field      String    @db.VarChar(100)
+  value      String?   @db.VarChar(8126)
+  type       Int       @default(0) @db.TinyInt
+  gmt_create DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update DateTime? @default(now()) @db.DateTime(0)
+
+  @@unique([monitor_id, field], map: "unique_param")
+  @@index([monitor_id], map: "monitor_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_param_define {
+  id           BigInt    @id @default(autoincrement())
+  app          String    @db.VarChar(100)
+  name         String    @db.VarChar(100)
+  field        String    @db.VarChar(100)
+  type         String    @default("text") @db.VarChar(20)
+  required     Boolean   @default(false)
+  param_range  String    @db.VarChar(100)
+  param_limit  Int       @db.UnsignedTinyInt
+  param_option String    @db.VarChar(4000)
+  creator      String?   @db.VarChar(100)
+  modifier     String?   @db.VarChar(100)
+  gmt_create   DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update   DateTime? @default(now()) @db.DateTime(0)
+
+  @@unique([app, field], map: "unique_param_define")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_tag {
+  id         BigInt    @id @default(autoincrement())
+  name       String    @db.VarChar(100)
+  value      String?   @db.VarChar(100)
+  type       Int       @default(0) @db.TinyInt
+  color      String?   @default("#ffffff") @db.VarChar(100)
+  creator    String?   @db.VarChar(100)
+  modifier   String?   @db.VarChar(100)
+  gmt_create DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update DateTime? @default(now()) @db.DateTime(0)
+
+  @@unique([name, value], map: "unique_tag")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hzb_tag_monitor_bind {
+  id         BigInt    @id @default(autoincrement())
+  tag_id     BigInt
+  monitor_id BigInt
+  gmt_create DateTime  @default(now()) @db.Timestamp(0)
+  gmt_update DateTime? @default(now()) @db.DateTime(0)
+
+  @@index([tag_id, monitor_id], map: "index_tag_monitor")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_area {
+  id               Int       @default(autoincrement())
+  parent_id        Int?
+  regional_id      String?   @db.VarChar(11)
+  regional_name_cn String?   @db.VarChar(255)
+  level            Int       @default(0)
+  two_code         String?   @db.VarChar(2)
+  name_en          String    @db.VarChar(64)
+  name_cn          String?   @db.VarChar(64)
+  start_zip_code   String?   @db.VarChar(255)
+  end_zip_code     String?   @db.VarChar(255)
+  extra            String?   @db.VarChar(1024)
+  create_time      DateTime? @db.DateTime(0)
+  create_user      Int?
+  update_time      DateTime? @db.DateTime(0)
+  update_user      Int?
+  version          Int       @default(0)
+  deleted          Int       @default(0)
+  zipcode_area_id  BigInt?
+
+  @@id([id, name_en])
+  @@index([two_code], map: "index_two_code")
+  @@index([create_time], map: "lg_area_create_time_index")
+  @@index([create_user], map: "lg_area_create_user_index")
+  @@index([deleted], map: "lg_area_deleted_index")
+  @@index([level], map: "lg_area_level_index")
+  @@index([parent_id], map: "lg_area_parent_id_fk")
+  @@index([level, two_code], map: "lg_area_two_code_level_index")
+  @@index([regional_id], map: "lg_regional_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_bigbag_prepost_record {
+  id                    BigInt   @id @default(autoincrement())
+  prepost_number        String?  @db.VarChar(64)
+  lable_url             String?  @db.VarChar(500)
+  total_list_number     String?  @db.VarChar(64)
+  prepost_waybill_count Int      @default(0)
+  create_user           String?  @db.VarChar(64)
+  create_time           DateTime @db.DateTime(0)
+  update_user           String?  @db.VarChar(64)
+  update_time           DateTime @db.DateTime(0)
+  deleted               Int      @default(0)
+
+  @@index([prepost_number], map: "index_plp_number")
+  @@index([total_list_number], map: "index_total_number")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_channel_operate_log {
+  id                  Int      @id @unique(map: "lg_channel_operate_log_id_uindex") @default(autoincrement())
+  operate_module      String?  @db.VarChar(64)
+  check_code          String?  @db.VarChar(64)
+  operate_type        String?  @db.VarChar(64)
+  operate_description String?  @db.Text
+  update_params       String?  @db.Text
+  operate_ip          String?  @db.VarChar(64)
+  create_user         Int?
+  create_time         DateTime @default(now()) @db.DateTime(0)
+  version             Int?     @default(0)
+  deleted             Int?     @default(0)
+
+  @@index([create_time], map: "lg_channel_operate_log_create_time_uindex")
+  @@index([create_user], map: "lg_channel_operate_log_create_user_uindex")
+  @@index([deleted], map: "lg_channel_operate_log_deleted_uindex")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_collect_create_order_log {
+  id                      Int       @id @unique(map: "order_operate_log_id_uindex") @default(autoincrement())
+  state                   Int?      @default(1)
+  request_params          Json?
+  response_params         Json?
+  original_request_params Json?
+  order_number            String?   @db.VarChar(255)
+  customer_id             String?   @db.VarChar(255)
+  customer_name           String?   @db.VarChar(255)
+  create_time             DateTime  @default(now()) @db.DateTime(0)
+  create_user             Int?
+  update_time             DateTime? @db.DateTime(0)
+  update_user             Int?
+  version                 Int?
+
+  @@index([create_time], map: "lg_create_order_log_create_time_index")
+  @@index([create_user], map: "lg_create_order_log_create_user_index")
+  @@index([order_number], map: "lg_create_order_log_order_number_index")
+  @@index([state], map: "lg_create_order_log_state_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_create_order_log {
+  id                      Int      @id @unique(map: "order_operate_log_id_uindex") @default(autoincrement())
+  state                   Int?     @default(1)
+  request_params          Json?
+  response_params         Json?
+  original_request_params Json?
+  order_number            String?  @db.VarChar(255)
+  customer_id             String?  @db.VarChar(255)
+  customer_name           String?  @db.VarChar(255)
+  create_time             DateTime @default(now()) @db.DateTime(0)
+  create_user             Int?
+
+  @@index([create_time], map: "lg_create_order_log_create_time_index")
+  @@index([create_user], map: "lg_create_order_log_create_user_index")
+  @@index([order_number], map: "lg_create_order_log_order_number_index")
+  @@index([state], map: "lg_create_order_log_state_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_customer_channel {
+  id                               Int       @id @default(autoincrement())
+  customer_channel_type            Int
+  customer_channel_name            String    @unique(map: "lg_customer_channel_channel_name_uindex") @db.VarChar(64)
+  min_declare                      Decimal   @default(0.0000) @db.Decimal(10, 4)
+  max_declare                      Decimal   @default(0.0000) @db.Decimal(10, 4)
+  min_weight                       Decimal   @default(0.0000) @db.Decimal(10, 4)
+  max_weight                       Decimal   @default(0.0000) @db.Decimal(10, 4)
+  min_send_weight                  Decimal   @default(0.0000) @db.Decimal(10, 4)
+  max_send_weight                  Decimal   @default(0.0000) @db.Decimal(10, 4)
+  in_storage_use_order_weight_flag Boolean?  @default(false)
+  in_storage_order_weight_min      Decimal?  @default(0.0000) @db.Decimal(7, 4)
+  in_storage_order_weight_max      Decimal?  @default(0.0000) @db.Decimal(7, 4)
+  note_public                      String?   @db.Text
+  note_private                     String?   @db.Text
+  order_num_pool_id                BigInt?
+  order_num_pool_name              String?   @db.VarChar(256)
+  exchange_order                   Boolean?  @default(dbgenerated("b'0'")) @db.Bit(1)
+  exchange_type                    Int?
+  label_code                       String?   @db.VarChar(64)
+  data_push_api                    String?   @db.Text
+  proportion                       Int?
+  create_time                      DateTime? @db.DateTime(0)
+  create_user                      Int?
+  update_time                      DateTime? @db.DateTime(0)
+  update_user                      Int?
+  version                          Int       @default(0)
+  deleted                          Int       @default(0)
+  status                           Int       @default(1)
+  required_platform_no             Boolean?  @default(dbgenerated("b'0'")) @db.Bit(1)
+  channel_haul                     String?   @db.VarChar(16)
+  kingdee_id                       String?   @db.VarChar(64)
+  customer_channel_type_id         String?   @db.VarChar(10)
+  channel_country_affiliation_id   Int?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_customer_receive {
+  id                   Int       @id @default(autoincrement())
+  customer_id          Int?
+  customer_name        String?   @db.VarChar(255)
+  receive_name         String?   @db.VarChar(50)
+  receive_phone        String?   @db.VarChar(64)
+  receive_tax          String?   @db.VarChar(64)
+  receive_zipcode      String?   @db.VarChar(64)
+  receive_state        String?   @db.VarChar(64)
+  receive_city         String?   @db.VarChar(128)
+  receive_area         String?   @db.VarChar(128)
+  receive_address      String?   @db.VarChar(255)
+  receive_street       String?   @db.Text
+  receive_house_number String?   @default("") @db.VarChar(64)
+  receive_neighborhood String?   @db.VarChar(255)
+  create_time          DateTime? @db.DateTime(0)
+  create_user          Int?
+  update_time          DateTime? @db.DateTime(0)
+  update_user          Int?
+  version              Int       @default(0)
+  deleted              Int       @default(0)
+  joint_index          String?   @unique(map: "joint_index_only") @db.VarChar(255)
+  receive_mobile       String?   @db.VarChar(64)
+  receive_ie_number    String?   @db.VarChar(128)
+
+  @@index([customer_id], map: "customerIDinfo")
+  @@index([receive_name], map: "receiveNameInfo")
+  @@index([receive_zipcode], map: "receiveZipcodeInfo")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_customer_sender {
+  id                  Int       @id @default(autoincrement())
+  customer_id         Int?
+  customer_name       String?   @db.VarChar(128)
+  sender_name         String?   @db.VarChar(50)
+  sender_phone        String?   @db.VarChar(64)
+  sender_tax          String?   @db.VarChar(20)
+  sender_zipcode      String?   @db.VarChar(20)
+  sender_state        String?   @db.VarChar(64)
+  sender_city         String?   @db.VarChar(128)
+  sender_area         String?   @db.VarChar(128)
+  sender_address      String?   @db.VarChar(255)
+  sender_street       String?   @db.VarChar(128)
+  sender_house_number String?   @default("") @db.VarChar(20)
+  sender_neighborhood String?   @db.VarChar(20)
+  create_time         DateTime? @db.DateTime(0)
+  create_user         Int?
+  update_time         DateTime? @db.DateTime(0)
+  update_user         Int?
+  version             Int       @default(0)
+  deleted             Int       @default(0)
+  joint_index         String?   @unique(map: "only_index") @db.VarChar(255)
+  sender_mobile       String?   @db.VarChar(64)
+  sender_ie_number    String?   @db.VarChar(128)
+
+  @@index([customer_id], map: "customerIDinfo")
+  @@index([sender_name], map: "senderNameInfo")
+  @@index([sender_zipcode], map: "senderZipcodeInfo")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_delivery_path {
+  id                     Int       @id @default(autoincrement())
+  path_number            String?   @db.VarChar(255)
+  relevance_site_id      Int?
+  city_state             String?   @db.VarChar(255)
+  relevance_site_name    String?   @db.VarChar(255)
+  relevance_site_code    String?   @db.VarChar(55)
+  relevance_site_zipcode String?   @db.VarChar(55)
+  remark                 String?   @db.VarChar(255)
+  status                 Int?
+  create_time            DateTime? @db.DateTime(0)
+  update_time            DateTime? @db.DateTime(0)
+  create_user            Int?
+  update_user            Int?
+  version                Int       @default(0)
+  deleted                Int       @default(0)
+  provider_id            Int?
+  provider_name          String?   @db.VarChar(255)
+  provider_mobile        String?   @db.VarChar(128)
+  provider_zip_code      String?   @db.VarChar(255)
+  provider_state         String?   @db.VarChar(128)
+  provider_city          String?   @db.VarChar(128)
+  provider_area          String?   @db.VarChar(128)
+  provider_street        String?   @db.VarChar(128)
+  provider_house_number  String?   @db.VarChar(128)
+  provider_address       String?   @db.VarChar(255)
+  transport_company_id   Int?
+  transport_company      String?   @db.VarChar(255)
+
+  @@index([path_number], map: "path_number_index")
+  @@index([provider_name], map: "provider_name_index")
+  @@index([relevance_site_name], map: "relevance_site_name_index")
+  @@index([transport_company], map: "transport_company_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_logistics_invoice {
+  id                   BigInt    @id @default(autoincrement())
+  waybill_number       String    @db.VarChar(64)
+  logistics_number     String?   @db.VarChar(64)
+  invoice_number       String?   @db.VarChar(64)
+  invoice_secret_key   String?   @db.VarChar(100)
+  estimate_fee         Decimal?  @db.Decimal(10, 3)
+  tax_rate             Decimal?  @db.Decimal(10, 2)
+  freight_include_rate Decimal?  @db.Decimal(10, 2)
+  invoice_issue_time   DateTime? @db.DateTime(0)
+  invoice_status       Int?
+  invoice_type         Int?
+  section              Int?
+  start_city           String?   @db.VarChar(64)
+  end_city             String?   @db.VarChar(64)
+  generate_fail_reason String?   @db.VarChar(200)
+  invoice_url          String?   @db.VarChar(1000)
+  create_time          DateTime? @default(now()) @db.DateTime(0)
+  create_user          Int?
+  update_time          DateTime? @default(now()) @db.DateTime(0)
+  update_user          Int?
+  version              Int?      @default(0) @db.UnsignedInt
+  deleted              Int?      @default(0) @db.UnsignedInt
+  collect_fee          Decimal?  @db.Decimal(10, 0)
+  deliver_fee          Decimal?  @db.Decimal(10, 3)
+
+  @@index([create_time], map: "create_time_index")
+  @@index([invoice_issue_time], map: "invoice_issue_time_index")
+  @@index([logistics_number], map: "logistics_number_index")
+  @@index([invoice_status], map: "status_index")
+  @@index([waybill_number], map: "waybill_number_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_logistics_mdfe {
+  id             BigInt    @id @default(autoincrement())
+  vehicle_id     Int?
+  vericle_number String?   @db.VarChar(64)
+  tag_number     String?   @db.VarChar(64)
+  mdfe_key       String?   @db.VarChar(100)
+  mdfe_url       String?   @db.VarChar(500)
+  mdfe_pro       String?   @db.VarChar(64)
+  fail_reason    String?   @db.VarChar(500)
+  mdfe_state     Int?
+  issue_time     DateTime? @db.DateTime(0)
+  create_time    DateTime? @db.DateTime(0)
+  create_user    String?   @db.VarChar(64)
+  update_time    DateTime? @db.DateTime(0)
+  update_user    String?   @db.VarChar(64)
+  version        Int?      @default(0)
+  deleted        Int       @default(0)
+
+  @@index([mdfe_state], map: "idx_state")
+  @@index([tag_number], map: "idx_tag_number")
+  @@index([vehicle_id], map: "idx_vehicel_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_nfse_fee {
+  id             BigInt    @id @default(autoincrement())
+  waybill_number String    @db.VarChar(128)
+  section        Int?
+  collect_fee    Decimal?  @db.Decimal(10, 3)
+  deliver_fee    Decimal?  @db.Decimal(10, 3)
+  estimate_fee   Decimal?  @db.Decimal(10, 3)
+  create_user    String?   @db.VarChar(64)
+  create_time    DateTime  @db.DateTime(0)
+  update_user    String?   @db.VarChar(64)
+  update_time    DateTime? @db.DateTime(0)
+  deleted        Int       @default(0)
+  version        Int?
+
+  @@index([section], map: "idx_section")
+  @@index([waybill_number], map: "idx_waybill_number")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_nfse_invoice {
+  id                   BigInt    @id @default(autoincrement())
+  customer_id          BigInt?
+  customer_name        String?   @db.VarChar(128)
+  start_date           DateTime? @db.Date
+  end_date             DateTime? @db.Date
+  invoice_code         String?   @db.VarChar(255)
+  invoice_number       String?   @db.VarChar(64)
+  invoice_secret_key   String?   @db.VarChar(100)
+  estimate_fee         Decimal?  @db.Decimal(10, 3)
+  tax_rate             Decimal?  @db.Decimal(10, 2)
+  freight_include_rate Decimal?  @db.Decimal(10, 2)
+  invoice_issue_time   DateTime? @db.DateTime(0)
+  invoice_status       Int?
+  invoice_type         Int?
+  section              Int?
+  start_city           String?   @db.VarChar(64)
+  end_city             String?   @db.VarChar(64)
+  generate_fail_reason String?   @db.VarChar(100)
+  invoice_url          String?   @db.VarChar(1000)
+  create_time          DateTime? @default(now()) @db.DateTime(0)
+  create_user          Int?
+  update_time          DateTime? @default(now()) @db.DateTime(0)
+  update_user          Int?
+  version              Int?      @default(0) @db.UnsignedInt
+  deleted              Int?      @default(0) @db.UnsignedInt
+  collect_fee          Decimal?  @db.Decimal(10, 3)
+  deliver_fee          Decimal?  @db.Decimal(10, 3)
+
+  @@index([create_time], map: "create_time_index")
+  @@index([customer_id], map: "customer_id_index")
+  @@index([invoice_issue_time], map: "invoice_issue_time_index")
+  @@index([invoice_status], map: "invoice_status_index")
+  @@index([section], map: "section_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order {
+  id                           Int       @id @default(autoincrement())
+  route_id                     Int?
+  provider_channel_id          Int?
+  customer_channel_id          Int       @default(1)
+  last_track_state_ref_id      Int?
+  customer_id                  BigInt
+  order_number                 String    @unique(map: "lg_order_order_number_uindex") @db.VarChar(64)
+  customer_number              String    @db.VarChar(64)
+  order_status                 String    @default("toBeCollected") @db.VarChar(32)
+  order_type                   String    @db.VarChar(32)
+  customer_channel_name        String    @db.VarChar(128)
+  provider_channel_code        String?   @db.VarChar(32)
+  provider_channel_name        String?   @db.VarChar(128)
+  customer_name                String?   @db.VarChar(128)
+  customer_alias               String?   @db.VarChar(128)
+  quantity                     Int       @default(1)
+  total_parcel_declared_weight Decimal   @db.Decimal(10, 4)
+  total_parcel_declared_value  Decimal   @db.Decimal(10, 4)
+  currency                     String    @default("BRL") @db.Char(5)
+  length                       Decimal?  @db.Decimal(10, 4)
+  width                        Decimal?  @db.Decimal(10, 4)
+  height                       Decimal?  @db.Decimal(10, 4)
+  order_source                 Int?      @default(1)
+  platform_code                String?   @default("") @db.VarChar(10)
+  platform_name                String?   @default("") @db.VarChar(255)
+  invoice                      String?   @db.VarChar(255)
+  invoice_name                 String?   @db.VarChar(255)
+  trade_terms                  String?   @db.VarChar(12)
+  extra                        Json?
+  remarks                      String?   @db.Text
+  receive_country              String?   @db.Char(2)
+  receive_country_cn           String?   @db.VarChar(64)
+  receive_name                 String?   @db.VarChar(50)
+  receive_phone                String?   @db.VarChar(64)
+  receive_mobile               String?   @db.VarChar(64)
+  receive_tax                  String?   @db.VarChar(64)
+  receive_mail                 String?   @db.VarChar(64)
+  receive_company              String?   @db.VarChar(128)
+  receive_zipcode              String?   @db.VarChar(64)
+  receive_state                String?   @db.VarChar(64)
+  receive_city                 String?   @db.VarChar(128)
+  receive_area                 String?   @db.VarChar(128)
+  receive_street               String?   @db.Text
+  receive_house_number         String?   @db.VarChar(64)
+  receive_certificate_type     String?   @db.VarChar(64)
+  receive_certificate_code     String?   @db.VarChar(64)
+  receive_neighborhood         String?   @db.VarChar(255)
+  receive_complement           String?   @db.VarChar(255)
+  sender_country               String?   @db.Char(2)
+  sender_country_cn            String?   @db.VarChar(64)
+  sender_name                  String?   @db.VarChar(50)
+  sender_phone                 String?   @db.VarChar(64)
+  sender_mobile                String?   @db.VarChar(64)
+  sender_tax                   String?   @db.VarChar(64)
+  sender_mail                  String?   @db.VarChar(64)
+  sender_company               String?   @db.VarChar(128)
+  sender_zipcode               String?   @db.VarChar(64)
+  sender_state                 String?   @db.VarChar(64)
+  sender_city                  String?   @db.VarChar(128)
+  sender_area                  String?   @db.VarChar(128)
+  sender_street                String?   @db.Text
+  sender_house_number          String?   @default("") @db.VarChar(64)
+  sender_certificate_type      String?   @db.VarChar(64)
+  sender_certificate_code      String?   @db.VarChar(64)
+  sender_neighborhood          String?   @db.VarChar(255)
+  sender_complement            String?   @db.VarChar(255)
+  create_time                  DateTime? @db.DateTime(0)
+  create_user                  Int?
+  update_time                  DateTime? @db.DateTime(0)
+  update_user                  Int?
+  version                      Int       @default(0)
+  deleted                      Int       @default(0)
+  collect_type                 Int?      @db.TinyInt
+  express_type                 Int?      @db.TinyInt
+  sender_address               String?   @db.VarChar(255)
+  receive_address              String?   @db.VarChar(255)
+  sender_ie_number             String?   @db.VarChar(128)
+  receive_ie_number            String?   @db.VarChar(128)
+  receive_city_code            String?   @db.VarChar(64)
+  sender_city_code             String?   @db.VarChar(64)
+
+  @@unique([customer_number, customer_id], map: "lg_order_customer_number_customer_id_uindex")
+  @@index([create_time], map: "lg_order_create_time_index")
+  @@index([create_user], map: "lg_order_create_user_index")
+  @@index([customer_channel_id], map: "lg_order_customer_channel_id_index")
+  @@index([customer_id, create_time], map: "lg_order_customer_id_create_time_index")
+  @@index([customer_id, customer_channel_id], map: "lg_order_customer_id_customer_channel_id_index")
+  @@index([customer_id], map: "lg_order_customer_id_index")
+  @@index([customer_number, create_time], map: "lg_order_customer_number_create_time_index")
+  @@index([customer_number], map: "lg_order_customer_number_index")
+  @@index([deleted], map: "lg_order_deleted_index")
+  @@index([order_number, create_time], map: "lg_order_order_number_create_time_index")
+  @@index([provider_channel_id], map: "lg_order_provider_channel_id_index")
+  @@index([order_status], map: "lg_order_status_index")
+  @@index([last_track_state_ref_id], map: "lg_order_track_ref_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_finance {
+  id                  Int       @id @default(autoincrement())
+  order_id            Int
+  bill_number         String?   @db.VarChar(255)
+  acceptance_flag     Boolean   @default(dbgenerated("b'0'")) @db.Bit(1)
+  forecast_fee        Decimal?  @db.Decimal(10, 4)
+  weighing_fee        Decimal?  @db.Decimal(10, 4)
+  withholding_amount  Decimal?  @db.Decimal(10, 4)
+  cost                Decimal?  @db.Decimal(10, 4)
+  standard_fee        Decimal?  @db.Decimal(10, 4)
+  buyers_fee          Decimal?  @db.Decimal(10, 4)
+  other_fee           Decimal?  @db.Decimal(10, 4)
+  receivable_fee      Decimal?  @db.Decimal(10, 4)
+  receivable_currency String?   @db.VarChar(10)
+  actual_cost         Decimal?  @db.Decimal(10, 4)
+  payable_fee         Decimal?  @db.Decimal(10, 4)
+  payable_payable     String?   @db.VarChar(10)
+  actually_paid       Decimal?  @db.Decimal(10, 4)
+  create_time         DateTime? @db.DateTime(0)
+  create_user         Int?
+  update_time         DateTime? @db.DateTime(0)
+  update_user         Int?
+  version             Int       @default(0)
+  deleted             Int       @default(0)
+
+  @@index([create_time], map: "lg_order_finance_create_time_index")
+  @@index([create_user], map: "lg_order_finance_create_user_index")
+  @@index([deleted], map: "lg_order_finance_deleted_index")
+  @@index([order_id], map: "lg_order_finance_order_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_num_pool {
+  id               BigInt    @id @default(autoincrement())
+  name             String    @db.VarChar(256)
+  lowest_threshold BigInt?
+  notice_user_id   BigInt?
+  remark           String?   @db.Text
+  create_user      Int?
+  create_time      DateTime? @db.DateTime(0)
+  update_user      Int?
+  update_time      DateTime? @db.DateTime(0)
+  version          Int       @default(0)
+  deleted          Int       @default(0)
+
+  @@unique([name, deleted], map: "lg_order_num_pool_name_uindex")
+  @@index([create_time], map: "lg_order_num_pool_create_time_index")
+  @@index([create_user], map: "lg_order_num_pool_create_user_index")
+  @@index([deleted], map: "lg_order_num_pool_deleted_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_num_pool_sub {
+  id                BigInt  @id @default(autoincrement())
+  order_num_pool_id BigInt
+  track_no          String? @unique(map: "lg_order_num_pool_sub_track_no_uindex") @db.VarChar(64)
+  state             Int     @default(0)
+
+  @@index([order_num_pool_id, state], map: "lg_order_num_pool_sub_order_num_pool_id_state_index")
+  @@index([state], map: "lg_order_num_pool_sub_state_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_num_segment {
+  id                       BigInt                     @id @default(autoincrement())
+  name                     String                     @unique(map: "lg_order_num_segment_name_uindex") @db.VarChar(256)
+  start_num                BigInt
+  end_num                  BigInt
+  used_num                 BigInt?
+  create_time              DateTime?                  @db.DateTime(0)
+  create_user              Int?
+  update_time              DateTime?                  @db.DateTime(0)
+  update_user              Int?
+  version                  Int                        @default(0)
+  deleted                  Int                        @default(0)
+  lg_order_num_segment_sub lg_order_num_segment_sub[]
+
+  @@index([create_time], map: "lg_order_num_segment_create_time_index")
+  @@index([create_user], map: "lg_order_num_segment_create_user_index")
+  @@index([deleted], map: "lg_order_num_segment_deleted_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_num_segment_sub {
+  id                   BigInt               @id @default(autoincrement())
+  order_num_segment_id BigInt
+  start_num            BigInt
+  end_num              BigInt
+  type                 String?              @default("self") @db.VarChar(32)
+  remark               String?              @db.Text
+  create_time          DateTime?            @db.DateTime(0)
+  create_user          Int?
+  update_time          DateTime?            @db.DateTime(0)
+  update_user          Int?
+  version              Int                  @default(0)
+  deleted              Int                  @default(0)
+  lg_order_num_segment lg_order_num_segment @relation(fields: [order_num_segment_id], references: [id], onDelete: NoAction, map: "lg_order_num_segment_sub_lg_order_num_segment_id_fk")
+
+  @@index([create_time], map: "lg_order_num_segment_sub_create_time_index")
+  @@index([create_user], map: "lg_order_num_segment_sub_create_user_index")
+  @@index([deleted], map: "lg_order_num_segment_sub_deleted_index")
+  @@index([order_num_segment_id], map: "lg_order_num_segment_sub_lg_order_num_segment_id_fk")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_waybill {
+  id                                 Int       @id @default(autoincrement())
+  order_id                           Int
+  big_bag_id                         Int?
+  big_bag_no                         String?   @db.VarChar(255)
+  outlets_id                         Int?
+  outlets_name                       String?   @db.VarChar(255)
+  waybill_number                     String    @unique(map: "lg_order_waybill_waybill_number_uindex") @db.VarChar(255)
+  logistics_number                   String?   @db.VarChar(255)
+  transport_status                   String?   @db.VarChar(255)
+  waybill_status                     Int       @default(1)
+  waybill_type                       String    @default("package") @db.VarChar(255)
+  label_url                          String?   @db.Text
+  has_back                           Int       @default(0)
+  exchange_order                     Int?      @default(0)
+  pic_oss_link                       String?   @db.Text
+  problem_type                       String?   @db.VarChar(64)
+  problem_reason                     String?   @db.VarChar(255)
+  total_declared_weight              Decimal   @db.Decimal(10, 4)
+  total_declared_value               Decimal   @db.Decimal(10, 4)
+  approximate_cost                   Decimal?  @db.Decimal(10, 4)
+  receipt_time                       DateTime? @db.DateTime(0)
+  receipt_user                       Int?
+  send_time                          DateTime? @db.DateTime(0)
+  send_user                          Int?
+  delivered_time                     DateTime? @db.DateTime(0)
+  delivered_voucher                  String?   @db.VarChar(255)
+  invoice                            String?   @db.VarChar(255)
+  invoice_name                       String?   @db.VarChar(255)
+  waybill_operat_extra               Json?
+  extra                              Json?
+  create_time                        DateTime? @default(now()) @db.DateTime(0)
+  create_user                        Int?
+  change_order_time                  DateTime? @db.DateTime(0)
+  update_time                        DateTime? @default(now()) @db.DateTime(0)
+  update_user                        Int?
+  version                            Int       @default(0)
+  deleted                            Int       @default(0)
+  pre_collect_station_id             BigInt?
+  pre_collect_station_name           String?   @db.VarChar(64)
+  collect_station_id                 BigInt?
+  collect_station_name               String?   @db.VarChar(64)
+  pre_deliver_station_id             BigInt?
+  pre_deliver_station_name           String?   @db.VarChar(64)
+  deliver_station_id                 BigInt?
+  deliver_station_name               String?   @db.VarChar(64)
+  service_lable_url                  String?   @db.VarChar(500)
+  change_lable_status                Int?      @default(1) @db.TinyInt
+  change_lable_operator              String?   @db.VarChar(255)
+  change_lable_error_cause           String?   @db.VarChar(255)
+  need_take_no                       Int?      @default(0)
+  vat                                String?   @db.VarChar(255)
+  pre_pay_taxes_way                  Int?      @db.TinyInt
+  state                              Int       @default(1) @db.TinyInt
+  instore_big_bag_id                 BigInt?
+  instore_big_bag_no                 String?   @db.VarChar(60)
+  outstore_big_bag_id                BigInt?
+  outstore_big_bag_no                String?   @db.VarChar(128)
+  problem_remark                     String?   @db.VarChar(255)
+  transit_bag_number                 String?   @db.VarChar(64)
+  invoice_number                     String?   @db.VarChar(255)
+  trade_type                         Int?      @default(1)
+  invoice_issue_date                 DateTime? @db.DateTime(0)
+  invoice_access_key                 String?   @db.VarChar(64)
+  invoice_serial_number              String?   @db.VarChar(64)
+  tax_code                           String?   @db.VarChar(64)
+  invoice_generation_status          Int?      @default(0)
+  provider_channel_code              String?   @db.VarChar(64)
+  provider_channel_id                Int?
+  route_number                       String?   @db.VarChar(64)
+  cu_logistics_lnvoice_serial_number String?   @db.VarChar(64)
+  cu_logistics_lnvoice_access_key    String?   @db.VarChar(64)
+  cu_logistics_lnvoice_type          Int?
+  collect_nfse_status                Int?      @default(1)
+  collect_nfse_id                    Int?
+  deliver_nfse_status                Int?      @default(1)
+  deliver_nfse_id                    Int?
+  invoice_money                      Decimal?  @db.Decimal(10, 3)
+
+  @@unique([waybill_number, create_time], map: "lg_order_waybill_waybill_number_create_time_uindex")
+  @@unique([waybill_number, delivered_time], map: "lg_order_waybill_waybill_number_delivered_time_uindex")
+  @@unique([waybill_number, receipt_time], map: "lg_order_waybill_waybill_number_receipt_time_uindex")
+  @@unique([waybill_number, send_time], map: "lg_order_waybill_waybill_number_send_time_uindex")
+  @@index([change_lable_status], map: "change_lable_status_index")
+  @@index([collect_nfse_id], map: "collect_nfse_id_index")
+  @@index([collect_nfse_status], map: "collect_nfse_status_index")
+  @@index([deliver_nfse_id], map: "deliver_nfse_id_index")
+  @@index([deliver_nfse_status], map: "deliver_nfse_status_index")
+  @@index([invoice_generation_status], map: "invoice_generation_status_index")
+  @@index([invoice_number], map: "invoice_number_index")
+  @@index([invoice_serial_number], map: "invoice_serial_number_index")
+  @@index([big_bag_no, big_bag_id], map: "lg_order_waybill_big_bag_no_big_bag_id_index")
+  @@index([create_time], map: "lg_order_waybill_create_time_index")
+  @@index([create_user], map: "lg_order_waybill_create_user_index")
+  @@index([deleted], map: "lg_order_waybill_deleted_index")
+  @@index([delivered_time], map: "lg_order_waybill_delivered_time_index")
+  @@index([exchange_order], map: "lg_order_waybill_exchange_order_index")
+  @@index([has_back], map: "lg_order_waybill_has_back_index")
+  @@index([logistics_number], map: "lg_order_waybill_logistics_number_index")
+  @@index([logistics_number, receipt_time], map: "lg_order_waybill_logistics_number_receipt_time_index")
+  @@index([logistics_number, send_time], map: "lg_order_waybill_logistics_number_send_time_index")
+  @@index([order_id], map: "lg_order_waybill_order_id_index")
+  @@index([outlets_id], map: "lg_order_waybill_outlets_id_index")
+  @@index([problem_type], map: "lg_order_waybill_problem_type_index")
+  @@index([receipt_time], map: "lg_order_waybill_receipt_time_index")
+  @@index([receipt_user], map: "lg_order_waybill_receipt_user_index")
+  @@index([send_time], map: "lg_order_waybill_send_time_index")
+  @@index([send_user], map: "lg_order_waybill_send_user_index")
+  @@index([transport_status], map: "lg_order_waybill_transport_status_index")
+  @@index([waybill_status], map: "lg_order_waybill_waybill_status_index")
+  @@index([provider_channel_code], map: "provider_channel_code_index")
+  @@index([provider_channel_id], map: "provider_channel_id_index")
+  @@index([route_number], map: "route_number_index")
+  @@index([trade_type], map: "trade_type_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_waybill_item {
+  id                  Int       @id @default(autoincrement())
+  order_id            Int
+  waybill_id          Int
+  name                String?   @db.VarChar(128)
+  quantity            Int       @default(1)
+  length              Decimal?  @db.Decimal(10, 4)
+  width               Decimal?  @db.Decimal(10, 4)
+  height              Decimal?  @db.Decimal(10, 4)
+  declared_value      Decimal?  @db.Decimal(10, 4)
+  declared_weight     Decimal?  @db.Decimal(10, 4)
+  invoice             String?   @db.Text
+  invoice_name        String?   @db.VarChar(255)
+  create_time         DateTime? @db.DateTime(0)
+  create_user         Int?
+  update_time         DateTime? @db.DateTime(0)
+  update_user         Int?
+  version             Int       @default(0)
+  deleted             Int       @default(0)
+  cadastral_number    Int?
+  hscode              Int?
+  texture             String?   @db.VarChar(128)
+  purpose             String?   @db.VarChar(128)
+  interlinkage        String?   @db.VarChar(255)
+  place_of_production String?   @db.VarChar(255)
+  specification       String?   @db.VarChar(128)
+  sku                 String?   @db.VarChar(255)
+  insurance           String?   @db.VarChar(128)
+  has_battery         Int?
+
+  @@index([create_time], map: "lg_order_item_create_time_index")
+  @@index([create_user], map: "lg_order_item_create_user_index")
+  @@index([deleted], map: "lg_order_item_deleted_index")
+  @@index([order_id], map: "lg_order_item_order_id_index")
+  @@index([waybill_id], map: "lg_order_item_waybill_id_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_waybill_mdfe {
+  id             BigInt    @id @default(autoincrement())
+  waybill_number String?   @db.VarChar(64)
+  section        Int?
+  mdfe_id        Int?
+  create_time    DateTime? @db.DateTime(0)
+  create_user    String?   @db.VarChar(64)
+  update_time    DateTime? @db.DateTime(0)
+  update_user    String?   @db.VarChar(64)
+  version        Int?      @default(0)
+  deleted        Int?      @default(0)
+
+  @@index([mdfe_id], map: "idx_mdfeis")
+  @@index([section], map: "idx_section")
+  @@index([waybill_number], map: "idx_waybill_number")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_waybill_minuta {
+  id                     BigInt    @id @default(autoincrement())
+  waybill_number         String    @db.VarChar(128)
+  logistics_number       String?   @db.VarChar(64)
+  collect_minuta         String?   @db.VarChar(500)
+  collect_minuta_status  Int       @default(0)
+  delivery_minuta        String?   @db.VarChar(500)
+  delivery_minuta_status Int       @default(0)
+  create_user            String?   @db.VarChar(64)
+  create_time            DateTime? @db.DateTime(0)
+  update_user            String?   @db.VarChar(64)
+  update_time            DateTime? @db.DateTime(0)
+  deleted                Int       @default(0)
+  collect_fee            Decimal?  @db.Decimal(10, 3)
+  estimate_fee           Decimal?  @db.Decimal(10, 3)
+  deliver_fee            Decimal?  @db.Decimal(10, 3)
+
+  @@index([collect_minuta_status], map: "collect_minuta_status_index")
+  @@index([create_time], map: "create_time_index")
+  @@index([delivery_minuta_status], map: "delivery_minuta_status_index")
+  @@index([logistics_number], map: "logistics_number_index")
+  @@index([waybill_number], map: "waybill_number_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_order_waybill_size_weight {
+  id                BigInt    @id @default(autoincrement())
+  waybill_number    String    @db.VarChar(64)
+  waybill_id        BigInt
+  length            Decimal   @db.Decimal(10, 4)
+  width             Decimal   @db.Decimal(10, 4)
+  height            Decimal   @db.Decimal(10, 4)
+  weight            Decimal   @db.Decimal(10, 4)
+  actual_length     Decimal?  @db.Decimal(10, 4)
+  actual_width      Decimal?  @db.Decimal(10, 4)
+  actual_height     Decimal?  @db.Decimal(10, 4)
+  sorted_weight     Decimal?  @db.Decimal(10, 3)
+  sorted_height     Decimal?  @db.Decimal(10, 3)
+  sorted_width      Decimal?  @db.Decimal(10, 3)
+  sorted_length     Decimal?  @db.Decimal(10, 3)
+  weighing_weight   Decimal?  @db.Decimal(10, 4)
+  outlets_weight    Decimal?  @db.Decimal(10, 3)
+  transport_weight  Decimal?  @db.Decimal(10, 3)
+  transport_height  Decimal?  @db.Decimal(10, 3)
+  transport_width   Decimal?  @db.Decimal(10, 3)
+  transport_length  Decimal?  @db.Decimal(10, 3)
+  volume_weight     Decimal?  @db.Decimal(10, 4)
+  charge_weight     Decimal?  @db.Decimal(10, 4)
+  buyers_weight     Decimal?  @db.Decimal(10, 4)
+  photo_url         String?   @db.Text
+  create_user       String?   @db.VarChar(64)
+  create_time       DateTime  @db.DateTime(0)
+  update_user       String?   @db.VarChar(64)
+  update_time       DateTime? @db.DateTime(0)
+  version           Int       @default(0)
+  deleted           Int       @default(0)
+  signed_photo      String?   @db.VarChar(255)
+  signed_name_photo String?   @db.VarChar(255)
+
+  @@index([waybill_id], map: "index_waybill_id")
+  @@index([waybill_number], map: "index_waybill_number")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_platform_info {
+  id            Int      @id @default(autoincrement())
+  platform_code String   @unique(map: "lg_platform_info_platform_code_uindex") @db.VarChar(62)
+  platform_name String   @db.VarChar(255)
+  remark        String?  @db.Text
+  create_time   DateTime @default(now()) @db.DateTime(0)
+  create_user   Int?
+  update_time   DateTime @default(now()) @db.DateTime(0)
+  update_user   Int?
+  version       Int      @default(0)
+  deleted       Int      @default(0)
+
+  @@index([create_time], map: "lg_platform_info_create_time_index")
+  @@index([create_user], map: "lg_platform_info_create_user_index")
+  @@index([deleted], map: "lg_platform_info_deleted_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_postcode {
+  id                Int       @id @default(autoincrement())
+  area_id           Int?
+  post_code         String    @unique(map: "lg_postcode_post_code_index") @db.Char(8)
+  post_code_state   Boolean   @default(dbgenerated("b'0'")) @db.Bit(1)
+  state_two_code    String?   @db.Char(2)
+  city              String?   @db.VarChar(255)
+  area              String?   @db.VarChar(255)
+  longitude         Float?
+  latitude          Float?
+  remark            String?   @db.Text
+  create_time       DateTime? @default(now()) @db.DateTime(0)
+  create_user       Int?
+  update_time       DateTime? @default(now()) @db.DateTime(0)
+  update_user       Int?
+  version           Int       @default(0)
+  deleted           Int       @default(0)
+  street_name       String?   @db.VarChar(255)
+  city_code         String?   @db.VarChar(64)
+  neighborhood_name String?   @db.VarChar(255)
+
+  @@unique([post_code, post_code_state, deleted], map: "lg_postCode_uindex")
+  @@index([city], map: "lg_post_code_city_index")
+  @@index([create_time], map: "lg_postcode_create_time_index")
+  @@index([create_user], map: "lg_postcode_create_user_index")
+  @@index([deleted], map: "lg_postcode_deleted_index")
+  @@index([state_two_code], map: "lg_postcode_state_two_code_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_provider_channel {
+  id                    Int       @default(autoincrement())
+  provider_id           String?   @db.VarChar(64)
+  provider_channel_code String    @unique(map: "lg_provider_channel_code_uindex") @db.VarChar(64)
+  provider_channel_name String    @unique(map: "lg_provider_channel_channel_name_uindex") @db.VarChar(255)
+  provider_name         String?   @default("") @db.VarChar(128)
+  provider_code         String?   @db.VarChar(128)
+  major_info            String?   @db.VarChar(64)
+  system_name           String?   @db.VarChar(64)
+  system_id             Int
+  take_number           Int
+  whether_order         Int
+  sync_label            Boolean   @default(dbgenerated("b'0'")) @db.Bit(1)
+  variable_list         String?   @db.Text
+  system_variable_list  String?   @db.Text
+  check_rule            String?   @db.Text
+  state                 Int?
+  take_no_mode          Int       @default(1)
+  create_time           DateTime? @db.DateTime(0)
+  create_user           Int?
+  update_time           DateTime? @db.DateTime(0)
+  update_user           Int?
+  version               Int?      @default(0)
+  deleted               Int       @default(0)
+  package_max_weight    Decimal?  @db.Decimal(10, 3)
+
+  @@id([id, provider_channel_code])
+  @@index([provider_id], map: "index_provider_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_provider_system {
+  id                 Int       @default(autoincrement())
+  name               String    @db.VarChar(128)
+  code               String    @unique(map: "index_code") @db.VarChar(64)
+  check_rule         String?   @db.Text
+  variable_list      String?   @db.Text
+  content            String?   @db.Text
+  create_time        DateTime? @db.DateTime(0)
+  create_user        Int?
+  update_time        DateTime? @db.DateTime(0)
+  update_user        Int?
+  version            Int       @default(0)
+  deleted            Int       @default(0)
+  declared_count_min Int?
+  declared_count_max Int?
+  batch_count_min    Int?      @default(0)
+
+  @@id([id, code])
+  @@index([name], map: "lg_provider_system_name_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_provider_system_error {
+  id                       Int       @id @default(autoincrement())
+  service_error_code       String    @db.VarChar(64)
+  service_system_id        Int?
+  service_system_code      String?   @db.VarChar(64)
+  service_system_name      String    @db.VarChar(64)
+  chinese_translateInfo    String?   @db.VarChar(128)
+  english_translateInfo    String?   @db.VarChar(128)
+  portuguese_translateInfo String?   @db.VarChar(128)
+  remark                   String?   @db.Text
+  create_time              DateTime? @db.DateTime(0)
+  create_user              Int?
+  update_time              DateTime? @db.DateTime(0)
+  update_user              Int?
+  version                  Int       @default(0)
+  deleted                  Int       @default(0)
+
+  @@index([service_system_code], map: "index_code")
+  @@index([service_system_name], map: "lg_provider_system_name_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_push_order_waybill {
+  id                Int       @id @default(autoincrement())
+  waybill_number    String    @unique(map: "waybill_number_uindex") @db.VarChar(64)
+  logistics_number  String?   @unique(map: "logistics_number_uindex") @db.VarChar(255)
+  waybill_status    Int?
+  recipient         String?   @db.VarChar(255)
+  recipient_id      Int?
+  recipient_code    String?   @db.VarChar(255)
+  push_type         Int?
+  push_status       Int?
+  push_succeed_time DateTime? @db.DateTime(0)
+  create_time       DateTime? @default(now()) @db.DateTime(0)
+  create_user       Int?
+  update_time       DateTime? @default(now()) @db.DateTime(0)
+  update_user       Int?
+  version           Int       @default(0)
+  deleted           Int       @default(0)
+
+  @@index([create_time], map: "create_time_index")
+  @@index([push_status], map: "push_status_index")
+  @@index([push_succeed_time], map: "push_succeed_time_index")
+  @@index([push_type], map: "push_type_index")
+  @@index([recipient], map: "recipient_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_regional {
+  id          Int       @id @default(autoincrement())
+  name_cn     String    @db.VarChar(255)
+  name_en     String    @db.VarChar(255)
+  create_time DateTime? @db.DateTime(0)
+  create_user Int?
+  update_time DateTime? @db.DateTime(0)
+  update_user Int?
+  version     Int       @default(0)
+  deleted     Int       @default(0)
+
+  @@index([create_time], map: "lg_regional_create_time")
+  @@index([create_user], map: "lg_regional_create_user_index")
+  @@index([deleted], map: "lg_regional_deleted_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_storage_record {
+  id                 Int       @id @default(autoincrement())
+  instore_big_bag_id BigInt?
+  instore_big_bag_no String?   @unique(map: "instore_big_bag_no_only") @db.VarChar(255)
+  package_count      Int?
+  weighing_weight    Decimal?  @db.Decimal(10, 4)
+  create_time        DateTime? @db.DateTime(0)
+  update_time        DateTime? @db.DateTime(0)
+  create_user        Int?
+  update_user        Int?
+  version            Int       @default(0)
+  deleted            Int       @default(0)
+
+  @@index([instore_big_bag_id], map: "bag_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_storage_record_no {
+  id                       Int       @id @default(autoincrement())
+  waybill_number           String    @unique(map: "waybillOnly") @db.VarChar(255)
+  customer_weight          Decimal?  @db.Decimal(10, 4)
+  transport_weight         Decimal?  @db.Decimal(10, 4)
+  revise_weight            Decimal?  @default(0.0000) @db.Decimal(10, 4)
+  length                   Decimal?  @db.Decimal(10, 4)
+  width                    Decimal?  @db.Decimal(10, 4)
+  height                   Decimal?  @db.Decimal(10, 4)
+  create_user              String?   @db.VarChar(64)
+  create_time              DateTime  @db.DateTime(0)
+  update_user              String?   @db.VarChar(64)
+  update_time              DateTime? @db.DateTime(0)
+  version                  Int       @default(0)
+  deleted                  Int       @default(0)
+  logistics_number         String?   @db.VarChar(128)
+  pre_deliver_station_id   BigInt?
+  pre_deliver_station_name String?   @db.VarChar(255)
+  system_id                BigInt?
+  system_name              String?   @db.VarChar(255)
+
+  @@index([pre_deliver_station_id], map: "preDeliverIdOnly")
+  @@index([system_id], map: "systemIdOnly")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_storage_record_out {
+  id                  Int       @id @default(autoincrement())
+  outstore_big_bag_id Int?
+  outstore_big_bag_no String    @unique(map: "outstore_big_bag_no_only") @db.VarChar(128)
+  package_count       Int?
+  create_time         DateTime? @db.DateTime(0)
+  update_time         DateTime? @db.DateTime(0)
+  create_user         Int?
+  update_user         Int?
+  version             Int       @default(0)
+  deleted             Int       @default(0)
+  vehicle_number      String?   @db.VarChar(64)
+  vehicle_name        String?   @db.VarChar(64)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_tax_rate {
+  id                BigInt    @id @default(autoincrement())
+  origin_state      String?   @db.VarChar(64)
+  destination_state String?   @db.VarChar(64)
+  tax_rate          Decimal?  @default(0.00) @db.Decimal(10, 2)
+  create_time       DateTime? @db.DateTime(0)
+  create_user       String?   @db.VarChar(64)
+  update_time       DateTime? @db.DateTime(0)
+  update_user       String?   @db.VarChar(64)
+  version           Int?      @default(0)
+  deleted           Int       @default(0)
+
+  @@index([destination_state], map: "end_state_index")
+  @@index([origin_state], map: "origin_state_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_transit_big_bag {
+  id                    Int       @default(autoincrement())
+  instore_big_bag_no    String?   @unique(map: "instore_big_bag_no_unindex") @db.VarChar(64)
+  bag_count             Int?
+  package_count         Int?
+  server_channel_id     Int?
+  server_channel_name   String?   @db.VarChar(255)
+  declare_status        Int       @default(1) @db.TinyInt
+  prepost_number        String?   @db.VarChar(64)
+  declare_user          String?   @db.VarChar(255)
+  create_time           DateTime? @db.DateTime(0)
+  update_time           DateTime? @db.DateTime(0)
+  create_user           String?   @db.VarChar(255)
+  update_user           String?   @db.VarChar(255)
+  version               String?   @default("0") @db.VarChar(255)
+  deleted               String?   @default("0") @db.VarChar(255)
+  system_name           String?   @db.VarChar(128)
+  system_code           String?   @db.VarChar(128)
+  operate_success_count Int       @default(0)
+  no_declare_count      Int       @default(0)
+  total_weight          Decimal?  @db.Decimal(10, 3)
+
+  @@id([id, declare_status])
+  @@index([create_time], map: "create_time_index")
+  @@index([declare_status], map: "declare_status_index")
+  @@index([prepost_number], map: "prepost_number_index")
+  @@index([prepost_number], map: "provider_bag_no_index")
+  @@index([server_channel_id], map: "server_channel_id_index")
+  @@index([system_code], map: "system_code_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_transit_waybill_bag {
+  id                  Int       @id @default(autoincrement())
+  transit_bag_number  String    @db.VarChar(255)
+  package_count       Int?
+  waybill_number      String?   @db.VarChar(128)
+  weight              Decimal?  @db.Decimal(10, 3)
+  create_time         DateTime? @db.DateTime(0)
+  update_time         DateTime? @db.DateTime(0)
+  create_user         Int?
+  update_user         Int?
+  version             Int       @default(0)
+  deleted             Int       @default(0)
+  server_channel_id   Int?
+  server_channel_name String?   @db.VarChar(255)
+  instore_big_bag_no  String?   @db.VarChar(50)
+  vehicle_number      String?   @db.VarChar(50)
+  customer_name       String?   @db.VarChar(255)
+  logistics_number    String?   @db.VarChar(128)
+  prepost_number      String?   @db.VarChar(64)
+  declare_status      Int       @default(1) @db.TinyInt
+  provider_id         Int?
+  provider_name       String?   @db.VarChar(255)
+  route_number        String?   @db.VarChar(64)
+
+  @@index([declare_status], map: "declare_status_index")
+  @@index([instore_big_bag_no], map: "instore_big_bag_no_index")
+  @@index([provider_id], map: "lg_transit_waybill_bag_provider_id_index")
+  @@index([route_number], map: "lg_transit_waybill_bag_route_number_index")
+  @@index([prepost_number], map: "plp_number_index")
+  @@index([server_channel_id], map: "server_channel_id_index")
+  @@index([transit_bag_number], map: "transit_bag_number_index")
+  @@index([vehicle_number], map: "vehicle_number_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_transit_waybill_bag_sub {
+  id                     Int       @id @default(autoincrement())
+  transit_bag_number     String?   @unique(map: "transit_bag_number_info") @db.VarChar(128)
+  server_channel_name    String?   @db.VarChar(255)
+  server_channel_id      Int?
+  package_count          Int?
+  instore_big_bag_no     String?   @db.VarChar(50)
+  create_time            DateTime? @db.DateTime(0)
+  update_time            DateTime? @db.DateTime(0)
+  create_user            Int?
+  update_user            Int?
+  version                Int       @default(0)
+  deleted                Int       @default(0)
+  server_channel_type    Int?
+  server_channel_code    String?   @db.VarChar(128)
+  total_single_state     Int?      @default(0)
+  declare_status         Int       @default(1) @db.TinyInt
+  declare_operate_status Int       @default(1) @db.TinyInt
+  operate_success_count  Int       @default(0)
+  no_declare_count       Int       @default(0)
+  total_weight           Decimal?  @db.Decimal(10, 3)
+  vehicle_id             Int?
+  vehicle_number         String?   @db.VarChar(50)
+  vehicle_tag_number     String?   @db.VarChar(255)
+  loading_user_id        Int?
+  loading_time           DateTime? @db.DateTime(0)
+  unloading_user_id      Int?
+  unloading_time         DateTime? @db.DateTime(0)
+  shipping_status        Int?
+  provider_id            Int?
+  provider_name          String?   @db.VarChar(255)
+  route_number           String?   @db.VarChar(64)
+
+  @@index([declare_operate_status], map: "declare_operate_status_index")
+  @@index([declare_status], map: "declare_status_index")
+  @@index([instore_big_bag_no], map: "instore_big_bag_no_index")
+  @@index([loading_time], map: "lg_transit_waybill_bag_sub_loading_time_index")
+  @@index([loading_user_id], map: "lg_transit_waybill_bag_sub_loading_user_id_index")
+  @@index([provider_id], map: "lg_transit_waybill_bag_sub_provider_id_index")
+  @@index([route_number], map: "lg_transit_waybill_bag_sub_route_number_index")
+  @@index([shipping_status], map: "lg_transit_waybill_bag_sub_shipping_status_index")
+  @@index([unloading_time], map: "lg_transit_waybill_bag_sub_unloading_time_index")
+  @@index([unloading_user_id], map: "lg_transit_waybill_bag_sub_unloading_user_id_index")
+  @@index([vehicle_id], map: "lg_transit_waybill_bag_sub_vehicle_id_index")
+  @@index([vehicle_tag_number], map: "lg_transit_waybill_bag_sub_vehicle_tag_number_index")
+  @@index([server_channel_code], map: "server_channel_code_index")
+  @@index([server_channel_id], map: "server_channel_id_index")
+  @@index([server_channel_type], map: "server_channel_type_index")
+  @@index([total_single_state], map: "total_single_state_index")
+  @@index([vehicle_number], map: "vehicle_number_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lg_zipcode_area {
+  id           Int       @id @default(autoincrement())
+  code         String?   @unique(map: "lg_zipcode_area_code_index") @db.VarChar(300)
+  name         String?   @unique(map: "lg_zipcode_area_name_index") @db.VarChar(675)
+  status       Int?
+  deleted      Int?
+  create_time  DateTime? @db.DateTime(0)
+  create_user  Int?
+  update_time  DateTime? @db.DateTime(0)
+  version      Int?
+  remark       String?   @db.VarChar(1500)
+  update_user  Int?
+  grid_rule_id Int?
+
+  @@index([create_time], map: "lg_zipcode_area_create_time_index")
+  @@index([create_user], map: "lg_zipcode_area_create_user_index")
+  @@index([grid_rule_id], map: "lg_zipcode_area_lg_zipcode_area_create_user_index_index")
+  @@index([status], map: "lg_zipcode_area_status_index")
+  @@index([update_time], map: "lg_zipcode_area_update_time_index")
+  @@index([update_user], map: "lg_zipcode_area_update_user_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model m_message {
+  id              Int       @id @default(autoincrement())
+  title           String    @db.VarChar(128)
+  msg_type        Int
+  msg_type_desc   String?   @db.VarChar(128)
+  msg_data        String?   @db.Text
+  is_pop          Int?
+  expiration_time DateTime? @db.DateTime(0)
+  remark          String?   @db.VarChar(255)
+  create_time     DateTime? @db.DateTime(0)
+  create_user     Int?
+  update_time     DateTime? @db.DateTime(0)
+  update_user     Int?
+  version         Int       @default(0)
+  deleted         Int       @default(0)
+
+  @@index([create_time], map: "m_message_create_time_index")
+  @@index([create_user], map: "m_message_create_user_index")
+  @@index([deleted], map: "m_message_deleted_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model m_message_customer {
+  id              Int       @id @default(autoincrement())
+  customer_id     Int
+  customer_name   String?   @db.VarChar(225)
+  driver_id       Int?
+  scan_user_id    Int?
+  driver_name     String?   @db.VarChar(255)
+  package_count   Int?
+  scan_time       DateTime? @db.DateTime(0)
+  merchant_code   String?   @db.VarChar(255)
+  merchant_name   String?   @db.VarChar(255)
+  sender_phone    String?   @db.VarChar(64)
+  message_type    Int?
+  message_source  Int?
+  message_content String?   @db.VarChar(1024)
+  send_time       DateTime? @db.DateTime(0)
+  send_flng       Int?      @default(0)
+  message_id      String?   @db.VarChar(64)
+  send_number     Int?      @default(0)
+  send_error      String?   @db.VarChar(1024)
+  create_user     Int?
+  create_time     DateTime? @db.DateTime(0)
+  update_user     Int?
+  update_time     DateTime? @db.DateTime(0)
+  version         Int       @default(0)
+  deleted         Int       @default(0)
+
+  @@index([create_time], map: "m_message_customer_create_time_index")
+  @@index([customer_id], map: "m_message_customer_customer_id_index")
+  @@index([deleted], map: "m_message_customer_deleted_index")
+  @@index([driver_id], map: "m_message_customer_driver_id_index")
+  @@index([merchant_code], map: "m_message_customer_merchant_code_index")
+  @@index([message_id], map: "m_message_customer_message_id_index")
+  @@index([message_source], map: "m_message_customer_message_source_index")
+  @@index([message_type], map: "m_message_customer_message_type_index")
+  @@index([scan_time], map: "m_message_customer_scan_time_index")
+  @@index([scan_user_id], map: "m_message_customer_scan_user_id_index")
+  @@index([send_flng], map: "m_message_customer_send_flng_index")
+  @@index([send_time], map: "m_message_customer_send_time_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model m_message_user {
+  id                   Int       @id @default(autoincrement())
+  message_id           Int
+  title                String?   @db.VarChar(255)
+  msg_data             String?   @db.Text
+  msg_type             Int
+  msg_type_desc        String?   @db.VarChar(255)
+  is_pop               Int?
+  expiration_time      DateTime? @db.DateTime(0)
+  receive_id           Int
+  receive_type         Int
+  receive_type_chinese String?   @db.VarChar(32)
+  is_read              Int       @default(0)
+  read_time            DateTime? @db.DateTime(0)
+  create_time          DateTime? @db.DateTime(0)
+  create_user          Int?
+  update_time          DateTime? @db.DateTime(0)
+  update_user          Int?
+  version              Int       @default(0)
+  deleted              Int       @default(0)
+
+  @@index([create_time], map: "m_message_user_create_time_index")
+  @@index([create_user], map: "m_message_user_create_user_index")
+  @@index([deleted], map: "m_message_user_deleted_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model p_provider_info {
+  id                    BigInt   @id @default(autoincrement())
+  code                  String?  @db.VarChar(32)
+  provider_name         String?  @db.VarChar(64)
+  address               String?  @db.VarChar(64)
+  principle_name        String?  @db.VarChar(64)
+  phone_number          String?  @db.VarChar(32)
+  email                 String?  @db.VarChar(32)
+  zip_code              String?  @db.VarChar(64)
+  state                 Int      @default(1) @db.TinyInt
+  provider_type         Int?     @db.TinyInt
+  version               Int      @default(0)
+  use_third_part_sys    Int?     @db.TinyInt
+  create_time           DateTime @db.DateTime(0)
+  create_user           String?  @db.VarChar(64)
+  update_time           DateTime @db.DateTime(0)
+  update_user           String?  @db.VarChar(64)
+  deleted               Int      @default(0) @db.TinyInt
+  provider_body         String?  @db.VarChar(100)
+  service_type          String?  @db.Text
+  service_type_name     String?  @db.Text
+  provider_channel_info String?  @db.Text
+
+  @@index([code], map: "index_code")
+  @@index([state], map: "index_state")
+  @@index([provider_type], map: "index_type")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model rm_drivers {
+  id                      Int            @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  driver_name             String         @db.VarChar(255)
+  driver_document         String         @unique(map: "document_UNIQUE") @db.VarChar(11)
+  driver_license_validate DateTime
+  driver_license          String         @db.VarChar(9)
+  address                 String         @db.VarChar(255)
+  addressNumber           String?        @default("S/N") @db.VarChar(7)
+  driver_zipcode          String?        @db.VarChar(8)
+  driver_license_type     String         @db.VarChar(2)
+  phone_number            String?        @db.VarChar(14)
+  driver_license_score    Int?           @default(40)
+  driver_score            Int            @default(0)
+  outsourced_driver       Int            @db.TinyInt
+  is_active               Int            @db.TinyInt
+  updatedAt               DateTime       @default(now())
+  createdAt               DateTime       @default(now())
+  canceledAt              DateTime?
+  rm_equipment            rm_equipment[]
+
+  @@index([driver_document], map: "idx_document")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model rm_equipment {
+  id                 Int                  @unique(map: "id_UNIQUE") @default(autoincrement())
+  driver_document    String               @db.VarChar(11)
+  u_user_id          Int
+  vehicle_id         Int
+  updatedAt          DateTime             @default(now())
+  createdAt          DateTime             @default(now())
+  canceledAt         DateTime?
+  rm_drivers         rm_drivers           @relation(fields: [driver_document], references: [driver_document], onDelete: NoAction, onUpdate: NoAction, map: "equipment_ibfk_1")
+  u_user             u_user               @relation(fields: [u_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_equipment_u_user1")
+  rm_vehicle         rm_vehicle           @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_equipment_vehicle1")
+  rm_orders          rm_orders[]
+  rm_orders_delivery rm_orders_delivery[]
+  rm_route           rm_route[]
+
+  @@id([id, driver_document, vehicle_id])
+  @@index([driver_document], map: "driver_document")
+  @@index([u_user_id], map: "fk_equipment_u_user1_idx")
+  @@index([vehicle_id], map: "fk_equipment_vehicle1_idx")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model rm_financial_prices_compositions {
+  id                   BigInt    @id @default(autoincrement())
+  country              String    @db.VarChar(30)
+  regions              String    @db.VarChar(30)
+  state                String    @db.VarChar(5)
+  city                 String    @db.VarChar(50)
+  ibgeCodes            Int
+  capitalDistance      Int
+  baseDistance         String?   @db.VarChar(6)
+  macroRegions         String    @db.VarChar(50)
+  microRegions         String    @db.VarChar(50)
+  deliveryPricesZoning String    @db.VarChar(30)
+  minimumShipping      Decimal   @db.Decimal(10, 2)
+  minZipCode           String    @db.VarChar(12)
+  maxZipCode           String    @db.VarChar(12)
+  indexZipCode         Int
+  localCluster         String    @db.VarChar(100)
+  iata                 String    @db.VarChar(20)
+  titularPartner       String    @db.VarChar(70)
+  baseAddress          String    @db.VarChar(255)
+  segment              String    @db.VarChar(50)
+  modal                String    @db.VarChar(50)
+  riskArea             String    @db.VarChar(50)
+  lastMileTerm         Int
+  kg_0_to_1            Decimal?  @db.Decimal(10, 2)
+  kg_1_to_2            Decimal?  @db.Decimal(10, 2)
+  kg_2_to_3            Decimal?  @db.Decimal(10, 2)
+  kg_3_to_4            Decimal?  @db.Decimal(10, 2)
+  kg_4_to_5            Decimal?  @db.Decimal(10, 2)
+  kg_5_to_6            Decimal?  @db.Decimal(10, 2)
+  kg_6_to_7            Decimal?  @db.Decimal(10, 2)
+  kg_7_to_8            Decimal?  @db.Decimal(10, 2)
+  kg_8_to_9            Decimal?  @db.Decimal(10, 2)
+  kg_9_to_10           Decimal?  @db.Decimal(10, 2)
+  kg_10_to_11          Decimal?  @db.Decimal(10, 2)
+  kg_11_to_12          Decimal?  @db.Decimal(10, 2)
+  kg_12_to_13          Decimal?  @db.Decimal(10, 2)
+  kg_13_to_14          Decimal?  @db.Decimal(10, 2)
+  kg_14_to_15          Decimal?  @db.Decimal(10, 2)
+  kg_15_to_16          Decimal?  @db.Decimal(10, 2)
+  kg_16_to_17          Decimal?  @db.Decimal(10, 2)
+  kg_17_to_18          Decimal?  @db.Decimal(10, 2)
+  kg_18_to_19          Decimal?  @db.Decimal(10, 2)
+  kg_19_to_20          Decimal?  @db.Decimal(10, 2)
+  kg_20_to_21          Decimal?  @db.Decimal(10, 2)
+  kg_21_to_22          Decimal?  @db.Decimal(10, 2)
+  kg_22_to_23          Decimal?  @db.Decimal(10, 2)
+  kg_23_to_24          Decimal?  @db.Decimal(10, 2)
+  kg_24_to_25          Decimal?  @db.Decimal(10, 2)
+  kg_25_to_26          Decimal?  @db.Decimal(10, 2)
+  kg_26_to_27          Decimal?  @db.Decimal(10, 2)
+  kg_27_to_28          Decimal?  @db.Decimal(10, 2)
+  kg_28_to_29          Decimal?  @db.Decimal(10, 2)
+  kg_29_to_30          Decimal?  @db.Decimal(10, 2)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now())
+  canceledAt           DateTime?
+  active               Boolean   @default(true)
+  addKg                Decimal?  @db.Decimal(10, 2)
+
+  @@index([id, titularPartner], map: "financial_prices_compositions_id_titularPartner_idx")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model rm_orders {
+  id              Int          @default(autoincrement())
+  equipment_id    Int
+  route_id        Int
+  delivery_status Int          @db.TinyInt
+  updatedAt       DateTime     @default(now())
+  createdAt       DateTime     @default(now())
+  canceledAt      DateTime?
+  rm_equipment    rm_equipment @relation(fields: [equipment_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "orders_of_the_day_ibfk_1")
+  rm_route        rm_route     @relation(fields: [route_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "orders_of_the_day_ibfk_2")
+
+  @@id([id, equipment_id, route_id])
+  @@index([equipment_id], map: "equipment_id")
+  @@index([route_id], map: "route_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model rm_orders_delivery {
+  id                    Int          @default(autoincrement())
+  rm_equipment_id       Int
+  delivery_zone_zipcode String       @db.VarChar(5)
+  delivery_packages     Json
+  rm_equipment          rm_equipment @relation(fields: [rm_equipment_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rm_orders_delivery_rm_equipment1")
+
+  @@id([id, rm_equipment_id])
+  @@index([rm_equipment_id], map: "fk_rm_orders_delivery_rm_equipment1_idx")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model rm_route {
+  id                 Int          @unique(map: "id_UNIQUE") @default(autoincrement())
+  equipment_id       Int
+  collections_points String?      @db.VarChar(255)
+  deliverys_points   String?      @db.VarChar(255)
+  created_at         DateTime     @db.DateTime(0)
+  updated_at         DateTime?    @db.DateTime(0)
+  canceled_at        DateTime?    @db.DateTime(0)
+  rm_orders          rm_orders[]
+  rm_equipment       rm_equipment @relation(fields: [equipment_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "route_ibfk_1")
+
+  @@id([id, equipment_id])
+  @@index([equipment_id], map: "equipment_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model rm_vehicle {
+  id                       Int            @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  car_documentation        String         @unique(map: "car_documentation_UNIQUE") @db.VarChar(11)
+  license_plate            String         @unique(map: "license_plate_UNIQUE") @db.VarChar(7)
+  trailer_plate            String?        @db.VarChar(7)
+  RNTRC                    String?        @unique(map: "RNTRC_UNIQUE") @db.VarChar(11)
+  model                    String?        @db.VarChar(50)
+  brand                    String?        @db.VarChar(50)
+  vehicle_capacity         String?        @db.VarChar(7)
+  vehicle_type             String?        @db.VarChar(20)
+  car_tracker_company_name String?        @db.VarChar(255)
+  car_tracker_id           String?        @db.VarChar(20)
+  state                    String         @db.VarChar(10)
+  outsourced_vehicle       Int            @db.TinyInt
+  is_active                Int            @db.TinyInt
+  updatedAt                DateTime       @default(now())
+  createdAt                DateTime       @default(now())
+  canceledAt               DateTime?
+  owner_state              String?        @db.VarChar(20)
+  owner_cnpj               String?        @db.VarChar(64)
+  owner_ie_number          String?        @db.VarChar(64)
+  owner_name               String?        @db.VarChar(64)
+  capacity_weight          Decimal?       @db.Decimal(10, 3)
+  vehicel_weight           Decimal?       @db.Decimal(10, 3)
+  rm_equipment             rm_equipment[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model shein_data {
+  order_number   String? @db.VarChar(255)
+  waybill_number String? @db.VarChar(255)
+  date           String? @db.VarChar(255)
+
+  @@ignore
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sys_api_request {
+  id           Int       @id @default(autoincrement())
+  request_type String    @db.VarChar(255)
+  push_body    Json
+  biz_id       Int
+  status_code  Int?
+  result       Json?
+  error        String?   @db.VarChar(2000)
+  source_type  Int
+  create_user  Int?
+  create_time  DateTime? @db.DateTime(0)
+  update_user  Int?
+  update_time  DateTime? @db.DateTime(0)
+  version      Int       @default(0)
+  deleted      Int       @default(0)
+
+  @@index([biz_id], map: "sys_api_request_biz_id_index")
+  @@index([create_time], map: "sys_api_request_create_time_index")
+  @@index([create_user], map: "sys_api_request_create_user_index")
+  @@index([deleted], map: "sys_api_request_deleted_index")
+  @@index([request_type], map: "sys_api_request_request_type_index")
+  @@index([source_type], map: "sys_api_request_source_type_index")
+  @@index([status_code], map: "sys_api_request_status_code_index")
+  @@index([version], map: "sys_api_request_version_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sys_app_manage {
+  id           BigInt    @id @default(autoincrement())
+  name         String    @unique(map: "sys_app_manage_name_uindex") @db.VarChar(128)
+  type         Int
+  version_info String    @default("1.0.0") @db.VarChar(32)
+  url          String?   @db.VarChar(512)
+  remark       String?   @db.Text
+  create_time  DateTime? @db.DateTime(0)
+  create_user  Int?
+  update_time  DateTime? @db.DateTime(0)
+  update_user  Int?
+  deleted      Int       @default(0)
+  version      Int       @default(0)
+  compel       Int       @default(0)
+  version_code Int       @default(0)
+  extra        String?   @db.Text
+
+  @@index([create_time], map: "sys_app_manage_create_time_index")
+  @@index([create_user], map: "sys_app_manage_create_user_index")
+  @@index([deleted], map: "sys_app_manage_deleted_index")
+  @@index([name], map: "sys_app_manage_name_index")
+  @@index([type], map: "sys_app_manage_type_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sys_basic_data_log {
+  id          BigInt   @id @default(autoincrement())
+  query_id    Int?
+  source_name String   @db.VarChar(64)
+  operat_type String?  @db.VarChar(64)
+  ip_address  String?  @db.VarChar(64)
+  old_data    Json?
+  new_data    Json?
+  remark      String?  @db.VarChar(255)
+  create_user Int?
+  create_time DateTime @default(now()) @db.DateTime(0)
+  update_user Int?
+  update_time DateTime @default(now()) @db.DateTime(0)
+  version     Int      @default(0)
+  deleted     Int      @default(0)
+
+  @@index([create_time], map: "sys_basic_data_log_create_time_index")
+  @@index([deleted], map: "sys_basic_data_log_deleted_index")
+  @@index([ip_address], map: "sys_basic_data_log_ip_address_index")
+  @@index([operat_type], map: "sys_basic_data_log_operat_type_index")
+  @@index([query_id], map: "sys_basic_data_log_query_id_index")
+  @@index([source_name], map: "sys_basic_data_log_source_name_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sys_dict {
+  id          Int      @id @default(autoincrement())
+  dict_type   String   @default("") @db.VarChar(32)
+  dict_code   String   @default("") @db.VarChar(64)
+  dict_name   String   @default("") @db.VarChar(128)
+  dict_value  String   @default("") @db.VarChar(128)
+  create_time DateTime @default(now()) @db.DateTime(0)
+  create_user Int?
+  update_time DateTime @default(now()) @db.DateTime(0)
+  update_user Int?
+  version     Int      @default(0)
+  deleted     Int      @default(0)
+
+  @@unique([dict_type, dict_code, dict_name], map: "sys_dict_dict_type_code_name_undex")
+  @@index([create_time], map: "sys_dict_create_time_index")
+  @@index([create_user], map: "sys_dict_create_user_index")
+  @@index([deleted], map: "sys_dict_deleted_index")
+  @@index([dict_code], map: "sys_dict_dict_code_index")
+  @@index([dict_name], map: "sys_dict_dict_name_index")
+  @@index([dict_value], map: "sys_dict_dict_value_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sys_dict_lang {
+  id            Int      @id @default(autoincrement())
+  dict_id       String   @db.VarChar(32)
+  language      String   @db.VarChar(10)
+  dict_describe String   @default("") @db.VarChar(64)
+  create_time   DateTime @default(now()) @db.DateTime(0)
+  create_user   Int?
+  update_time   DateTime @default(now()) @db.DateTime(0)
+  update_user   Int?
+  version       Int      @default(0)
+  deleted       Int      @default(0)
+
+  @@unique([dict_id, language], map: "sys_dict_lang_dict_id_language_undex")
+  @@index([create_time], map: "sys_dict_lang_create_time_index")
+  @@index([create_user], map: "sys_dict_lang_create_user_index")
+  @@index([deleted], map: "sys_dict_lang_deleted_index")
+  @@index([dict_id], map: "sys_dict_lang_dict_id_index")
+  @@index([language], map: "sys_dict_lang_language_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sys_function_use_statistic {
+  id            BigInt    @id @default(autoincrement())
+  function_name String?   @db.VarChar(64)
+  request_url   String?   @db.VarChar(128)
+  function_code String?   @db.VarChar(64)
+  request_time  Int       @default(0)
+  fail_time     Int       @default(0)
+  log_date      DateTime? @db.Date
+  create_time   DateTime  @db.DateTime(0)
+  create_user   String?   @db.VarChar(64)
+  update_time   DateTime  @db.DateTime(0)
+  update_user   String?   @db.VarChar(64)
+  version       Int?      @default(0)
+  deleted       Int       @default(0)
+  alive_user    Int?      @default(0)
+
+  @@index([log_date], map: "log_date_index")
+  @@index([request_url], map: "request_url_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sys_increment_id {
+  id            BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  time          DateTime @db.DateTime(0)
+  type          Int
+  increment_num Int      @default(1)
+
+  @@unique([time, type], map: "uk_time_type")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model u_user {
+  id                      Int            @id @default(autoincrement())
+  code                    String?        @db.VarChar(64)
+  username                String         @unique(map: "index_username") @db.VarChar(64)
+  english_name            String?        @db.VarChar(64)
+  password                String         @db.VarChar(64)
+  real_name               String?        @db.VarChar(32)
+  phone                   String?        @db.VarChar(32)
+  roles                   String?        @db.VarChar(255)
+  org_id                  Int?
+  org_code                String?        @db.VarChar(255)
+  org_codes               String?        @db.VarChar(255)
+  platform_code           String?        @default("") @db.VarChar(255)
+  platform_name           String?        @default("") @db.VarChar(255)
+  has_audit               Int            @default(0)
+  user_state              Int            @default(1)
+  account_state           Int            @default(1)
+  permission_type         Int?
+  permission              Json?
+  idcard                  String?        @db.VarChar(36)
+  birthday                DateTime?      @db.DateTime(0)
+  sex                     Int?           @default(0)
+  wechat                  String?        @db.VarChar(64)
+  qq                      String?        @db.VarChar(11)
+  social_security         Int?           @default(0)
+  accumulation_fund       Int?           @default(0)
+  entry_time              DateTime?      @db.DateTime(0)
+  departure_time          DateTime?      @db.DateTime(0)
+  email                   String?        @db.VarChar(64)
+  nailing                 String?        @db.VarChar(64)
+  weibo                   String?        @db.VarChar(64)
+  education               Int?
+  resume                  String?        @db.VarChar(256)
+  resume_name             String?        @db.VarChar(64)
+  avatar                  String?        @db.VarChar(512)
+  address                 String?        @db.VarChar(64)
+  position                String?        @db.VarChar(64)
+  emergency_contact       String?        @db.VarChar(32)
+  emergency_contact_phone String?        @db.VarChar(32)
+  position_name           String?        @db.VarChar(64)
+  site_id                 BigInt?
+  site_name               String?        @db.VarChar(255)
+  remark                  String?        @db.VarChar(255)
+  create_time             DateTime?      @db.DateTime(0)
+  create_user             Int?
+  update_time             DateTime?      @db.DateTime(0)
+  update_user             Int?
+  version                 Int            @default(0)
+  deleted                 Int            @default(0)
+  user_type               Int?
+  use_limit               String?        @db.VarChar(255)
+  app_version             String?        @db.VarChar(255)
+  document_number         Float?
+  rm_equipment            rm_equipment[]
+
+  @@index([account_state], map: "u_user_account_state_index")
+  @@index([code], map: "u_user_code_index")
+  @@index([create_time], map: "u_user_create_time_index")
+  @@index([create_user], map: "u_user_create_user_index")
+  @@index([deleted], map: "u_user_deleted_index")
+  @@index([email], map: "u_user_email_index")
+  @@index([english_name], map: "u_user_english_name_index")
+  @@index([has_audit], map: "u_user_has_audit_index")
+  @@index([org_code], map: "u_user_org_code_index")
+  @@index([org_id], map: "u_user_org_id_index")
+  @@index([permission_type], map: "u_user_permission_type_index")
+  @@index([phone], map: "u_user_phone_index")
+  @@index([platform_code], map: "u_user_platform_code_index")
+  @@index([real_name], map: "u_user_real_name_index")
+  @@index([user_state], map: "u_user_user_state_index")
+  @@index([user_type], map: "u_user_user_type_index")
 }
