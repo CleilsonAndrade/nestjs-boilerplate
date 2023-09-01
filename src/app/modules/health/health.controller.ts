@@ -36,12 +36,104 @@ export class HealthController {
   @ApiOperation({
     summary:
       'The function checks the health of various components including the database, memory, and storage.',
+    description:
+      '- Health checks are crucial when it comes to complex backend setups. In a nutshell, a health check in the realm of web development usually consists of a special address, for example, https://my-website.com/health/readiness. A service or a component of your infrastructure (e.g., Kubernetes) checks this address continuously. Depending on the HTTP status code returned from a GET request to this address the service will take action when it receives an "unhealthy" response. Since the definition of "healthy" or "unhealthy" varies with the type of service you provide, the Terminus integration supports you with a set of health indicators.',
   })
-  @ApiResponse({ status: 200, description: 'Success in the request' })
-  @ApiResponse({ status: 401, description: 'Not authorized access' })
+  @ApiResponse({
+    status: 200,
+    description: 'Success in the request',
+    schema: {
+      default: {
+        status: 'success',
+        info: {
+          api: {
+            status: 'up',
+          },
+          name_db: {
+            status: 'up',
+          },
+        },
+        error: {},
+        details: {
+          api: {
+            status: 'up',
+          },
+          name_db: {
+            status: 'up',
+          },
+          memory_heap: {
+            status: 'up',
+          },
+          memory_rss: {
+            status: 'up',
+          },
+          storage: {
+            status: 'up',
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Not authorized access',
+    schema: {
+      default: {
+        statusCode: 401,
+        message: 'Unauthorized',
+      },
+    },
+  })
   @ApiResponse({
     status: 503,
     description: 'Service not available, contact technical support',
+    schema: {
+      default: {
+        status: 'error',
+        info: {
+          api: {
+            status: 'up',
+          },
+          name_db: {
+            status: 'up',
+          },
+        },
+        error: {
+          memory_heap: {
+            status: 'down',
+            message: 'Used heap exceeded the set threshold',
+          },
+          memory_rss: {
+            status: 'down',
+            message: 'Used rss exceeded the set threshold',
+          },
+          storage: {
+            status: 'down',
+            message: 'Used disk storage exceeded the set threshold',
+          },
+        },
+        details: {
+          api: {
+            status: 'up',
+          },
+          name_db: {
+            status: 'up',
+          },
+          memory_heap: {
+            status: 'down',
+            message: 'Used heap exceeded the set threshold',
+          },
+          memory_rss: {
+            status: 'down',
+            message: 'Used rss exceeded the set threshold',
+          },
+          storage: {
+            status: 'down',
+            message: 'Used disk storage exceeded the set threshold',
+          },
+        },
+      },
+    },
   })
   @Get()
   async check(): Promise<object> {

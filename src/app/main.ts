@@ -10,6 +10,7 @@ import {
   type SwaggerCustomOptions,
 } from '@nestjs/swagger';
 import * as fs from 'fs';
+import path from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
@@ -23,7 +24,10 @@ async function bootstrap(): Promise<void> {
     new ValidationPipe({ whitelist: true, forbidUnknownValues: false }),
   );
 
-  const descriptionHTML = fs.readFileSync('path_to_file_html', 'utf-8');
+  const descriptionHTML = fs.readFileSync(
+    `${path.resolve(__dirname)}/docs/index.html`,
+    'utf-8',
+  );
 
   const options: SwaggerCustomOptions = {
     customSiteTitle: 'NestJS Boilerplate - API Documentation',
@@ -37,7 +41,7 @@ async function bootstrap(): Promise<void> {
     .setTitle('NestJS Repository Pattern - API')
     .addTag('Default', 'Standard module for grouping endpoints')
     .setDescription(descriptionHTML)
-    .setExternalDoc('Documetation NestJs', 'https://docs.nestjs.com/')
+    .setExternalDoc('Documentation NestJs', 'https://docs.nestjs.com/')
     .setVersion('1.0')
     .setContact(
       'Support',
