@@ -22,6 +22,9 @@ jobs:
       - name: install yarn
         run: npm i -g yarn
 
+      - name: remove dist folder
+        run: rm -rf dist
+
       - name: install nest cli
         run: npm i -g @nestjs/cli
 

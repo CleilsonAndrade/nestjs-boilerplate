@@ -24,6 +24,9 @@ jobs:
       - name: install yarn
         run: npm i -g yarn
 
+      - name: remove dist folder
+        run: rm -rf dist
+
       - name: yarn install
         run: yarn install --frozen-lockfile
 
