@@ -75,6 +75,59 @@ export class HealthController {
     },
   })
   @ApiResponse({
+    status: 400,
+    description: 'Incorrect request, incorrect or missing information',
+    schema: {
+      default: {
+        status: 'error',
+        info: {
+          api: {
+            status: 'up',
+          },
+          token: {
+            status: 'up',
+          },
+          name_db: {
+            status: 'up',
+          },
+          memory_heap: {
+            status: 'up',
+          },
+          storage: {
+            status: 'up',
+          },
+        },
+        error: {
+          memory_rss: {
+            status: 'down',
+            message: 'Used rss exceeded the set threshold',
+          },
+        },
+        details: {
+          api: {
+            status: 'up',
+          },
+          token: {
+            status: 'up',
+          },
+          name_db: {
+            status: 'up',
+          },
+          memory_heap: {
+            status: 'up',
+          },
+          storage: {
+            status: 'up',
+          },
+          memory_rss: {
+            status: 'down',
+            message: 'Used rss exceeded the set threshold',
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
     status: 401,
     description: 'Not authorized access',
     schema: {
@@ -97,6 +150,9 @@ export class HealthController {
           name_db: {
             status: 'up',
           },
+          token: {
+            status: 'up',
+          },
         },
         error: {
           memory_heap: {
@@ -114,6 +170,9 @@ export class HealthController {
         },
         details: {
           api: {
+            status: 'up',
+          },
+          token: {
             status: 'up',
           },
           name_db: {
