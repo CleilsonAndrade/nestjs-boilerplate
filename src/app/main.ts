@@ -27,6 +27,8 @@ async function bootstrap(): Promise<void> {
 
   let options;
 
+  let config;
+
   if (process.env.NODE_ENVIRONMENT === 'production') {
     options = {
       swaggerOptions: {
@@ -34,36 +36,52 @@ async function bootstrap(): Promise<void> {
       },
       customSiteTitle: 'NestJS - API Swagger UI',
     };
+
+    config = new DocumentBuilder()
+      .setTitle('NestJS Repository Pattern - API')
+      .addTag('Default', 'Standard module for grouping endpoints')
+      .setDescription(descriptionHTML)
+      .setExternalDoc('Documentation NestJs', 'https://docs.nestjs.com/')
+      .setVersion('1.0')
+      .setContact(
+        'Support',
+        'https://enterprise.nestjs.com/',
+        'support@nestjs.com',
+      )
+      .setTermsOfService(
+        `https://raw.githubusercontent.com/nestjs/nest/master/LICENSE`,
+      )
+      .build();
   } else if (process.env.NODE_ENVIRONMENT === 'development') {
     options = {
       customSiteTitle: 'NestJS - API Swagger UI',
     };
+
+    config = new DocumentBuilder()
+      .addSecurity('bearer', {
+        type: 'http',
+        scheme: 'bearer',
+      })
+      .setTitle('NestJS Repository Pattern - API')
+      .addTag('Default', 'Standard module for grouping endpoints')
+      .setDescription(descriptionHTML)
+      .setExternalDoc('Documentation NestJs', 'https://docs.nestjs.com/')
+      .setVersion('1.0')
+      .setContact(
+        'Support',
+        'https://enterprise.nestjs.com/',
+        'support@nestjs.com',
+      )
+      .setTermsOfService(
+        `https://raw.githubusercontent.com/nestjs/nest/master/LICENSE`,
+      )
+      .addBearerAuth()
+      .build();
   } else {
     throw new Error(
       'Please set the environment to use: production or development',
     );
   }
-
-  const config = new DocumentBuilder()
-    .addSecurity('bearer', {
-      type: 'http',
-      scheme: 'bearer',
-    })
-    .setTitle('NestJS Repository Pattern - API')
-    .addTag('Default', 'Standard module for grouping endpoints')
-    .setDescription(descriptionHTML)
-    .setExternalDoc('Documentation NestJs', 'https://docs.nestjs.com/')
-    .setVersion('1.0')
-    .setContact(
-      'Support',
-      'https://enterprise.nestjs.com/',
-      'support@nestjs.com',
-    )
-    .setTermsOfService(
-      `https://raw.githubusercontent.com/nestjs/nest/master/LICENSE`,
-    )
-    .addBearerAuth()
-    .build();
 
   const document = SwaggerModule.createDocument(app, config);
 
