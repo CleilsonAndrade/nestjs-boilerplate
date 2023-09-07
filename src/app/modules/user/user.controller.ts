@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -137,9 +139,26 @@ export class UserController {
       },
     },
   })
+  @ApiQuery({
+    name: 'skip',
+    type: String,
+    required: true,
+    description: 'Start listing users from the first registered (e.g., 0)',
+    example: '0',
+  })
+  @ApiQuery({
+    name: 'take',
+    type: String,
+    required: true,
+    description: 'How many users will be listed per page (e.g., 10)',
+    example: '10',
+  })
   @Get()
-  async findAll(): Promise<any> {
-    return await this.userService.findAll();
+  async findAll(
+    @Query('skip') skip: string,
+    @Query('take') take: string,
+  ): Promise<any> {
+    return await this.userService.findAll(parseInt(take), parseInt(skip));
   }
 
   @ApiOperation({
