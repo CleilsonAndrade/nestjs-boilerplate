@@ -25,7 +25,8 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<any> {
+  async findAll(take: number, skip: number): Promise<any> {
+    console.log(take, skip);
     return `This action returns all user`;
   }
 
