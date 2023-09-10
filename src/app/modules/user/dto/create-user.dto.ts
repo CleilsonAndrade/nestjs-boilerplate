@@ -6,7 +6,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'This field id to add the userID',
     required: true,
-    example: 1234,
+    example: 1,
   })
   userID!: number;
 
