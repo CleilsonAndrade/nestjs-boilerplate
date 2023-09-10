@@ -225,8 +225,7 @@ export class UserController {
     schema: {
       default: {
         id: 1,
-        user_name: 'GrennD_e20',
-        password: '12@#!10Aa',
+        user_name: 'D@e100',
         user_is_active: 1,
         createdAt: '2023-08-31T12:00:58.723Z',
         updatedAt: '2023-09-08T12:00:58.723Z',
@@ -287,11 +286,10 @@ export class UserController {
     schema: {
       default: {
         id: 1,
-        user_name: 'johnD@e10',
-        password: '12@#!10Aa',
+        user_name: 'D@e100',
         user_is_active: 0,
         createdAt: '2023-08-31T12:00:58.723Z',
-        updatedAt: null,
+        updatedAt: '2023-09-08T12:00:58.723Z',
         canceledAt: '2023-09-15T12:00:58.723Z',
       },
     },
