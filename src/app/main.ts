@@ -25,6 +25,14 @@ async function bootstrap(): Promise<void> {
     'utf-8',
   );
 
+  const faviconPath = `data:image/png;base64,${fs
+    .readFileSync(path.resolve(__dirname, 'docs', 'assets', 'favicon.png'))
+    .toString('base64')}`;
+
+  const cssPath = fs
+    .readFileSync(path.resolve(__dirname, 'docs', 'assets', 'swagger-ui.css'))
+    .toString();
+
   let options;
 
   let config;
@@ -34,6 +42,8 @@ async function bootstrap(): Promise<void> {
       swaggerOptions: {
         supportedSubmitMethods: [],
       },
+      customfavIcon: faviconPath,
+      customCss: cssPath,
       customSiteTitle: 'NestJS - API Swagger UI',
     };
 
@@ -54,6 +64,8 @@ async function bootstrap(): Promise<void> {
       .build();
   } else if (process.env.NODE_ENVIRONMENT === 'development') {
     options = {
+      customfavIcon: faviconPath,
+      customCss: cssPath,
       customSiteTitle: 'NestJS - API Swagger UI',
     };
 
