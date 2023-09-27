@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { PrismaService } from '../../database/prisma/prisma.service';
 import type { CreateUserDto } from './dto/create-user.dto';
 import type { UpdateUserDto } from './dto/update-user.dto';
-// import { PrismaService } from 'src/app/database/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-  // constructor(private readonly prismaService: PrismaService){}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(
-    _createUserDto: CreateUserDto,
+    createUserDto: CreateUserDto,
     user: Express.User | object,
   ): Promise<any> {
     try {
@@ -19,7 +19,15 @@ export class UserService {
         throw new Error('Invalid user');
       }
 
-      return 'This action adds a new user' + username;
+      const create = await this.prismaService.user.create({
+        data: {
+          user_name: createUserDto.user_name,
+          password: createUserDto.password,
+          user_is_active: 1,
+        },
+      });
+
+      return `This action adds a new user ${create.user_name} by ${username}`;
     } catch (error: any) {
       throw new BadRequestException(error.message);
     }

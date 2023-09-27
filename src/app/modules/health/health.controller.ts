@@ -1,6 +1,16 @@
-import { BadRequestException, Controller, Get } from '@nestjs/common';
-// import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   DiskHealthIndicator,
   HealthCheckService,
@@ -11,8 +21,8 @@ import { PrismaOrmHealthIndicator } from './prisma.health.service';
 import { TokenHealthIndicator } from './token.health.service';
 
 @ApiTags('Default')
-// @ApiBearerAuth()
-// @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('health')
 export class HealthController {
   constructor(
