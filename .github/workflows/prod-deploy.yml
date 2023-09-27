@@ -32,13 +32,13 @@ jobs:
 
       - name: 'Create env file'
         run: |
-          echo '${{ secrets.PROD_ENV_FILE }}' > .env
+          echo '${{ secrets.STAGE_ENV_FILE }}' > .env
 
       - name: prisma generate
         run: yarn gen
 
-      - name: prisma migrate
-        run: yarn prisma migrate deploy
+      - name: prisma generate schema
+        run: yarn prisma generate --schema prisma/schema.prisma
 
       - name: build
         run: yarn build

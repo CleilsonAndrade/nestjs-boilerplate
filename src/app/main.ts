@@ -7,6 +7,7 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
 import path from 'path';
+import { SwaggerTheme } from 'swagger-themes';
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
@@ -15,6 +16,10 @@ async function bootstrap(): Promise<void> {
     new FastifyAdapter(),
     { cors: true },
   );
+
+  let options;
+
+  let config;
 
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidUnknownValues: false }),
@@ -29,13 +34,11 @@ async function bootstrap(): Promise<void> {
     .readFileSync(path.resolve(__dirname, 'docs', 'assets', 'favicon.png'))
     .toString('base64')}`;
 
+  const theme = new SwaggerTheme('v3');
+  const darkStyle = theme.getBuffer('dark');
   const cssPath = fs
     .readFileSync(path.resolve(__dirname, 'docs', 'assets', 'swagger-ui.css'))
     .toString();
-
-  let options;
-
-  let config;
 
   if (process.env.NODE_ENVIRONMENT === 'production') {
     options = {
@@ -43,7 +46,7 @@ async function bootstrap(): Promise<void> {
         supportedSubmitMethods: [],
       },
       customfavIcon: faviconPath,
-      customCss: cssPath,
+      customCss: darkStyle + cssPath,
       customSiteTitle: 'NestJS - API Swagger UI',
     };
 
@@ -65,7 +68,7 @@ async function bootstrap(): Promise<void> {
   } else if (process.env.NODE_ENVIRONMENT === 'development') {
     options = {
       customfavIcon: faviconPath,
-      customCss: cssPath,
+      customCss: darkStyle + cssPath,
       customSiteTitle: 'NestJS - API Swagger UI',
     };
 

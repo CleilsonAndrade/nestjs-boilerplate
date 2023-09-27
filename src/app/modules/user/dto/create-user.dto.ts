@@ -1,17 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export class CreateUserDto {
-  @IsNumber()
-  @ApiProperty({
-    description: 'This field id to add the userID',
-    required: true,
-    example: 1,
-  })
-  userID!: number;
-
   @IsString()
-  @IsNotEmpty({ message: 'Provide the driver name' })
+  @IsNotEmpty({ message: 'Provide the user name' })
   @MaxLength(64)
   @ApiProperty({
     description: 'This field is to add the user_name',
@@ -29,4 +28,16 @@ export class CreateUserDto {
     example: '12@#!10Aa',
   })
   password!: string;
+
+  @IsInt()
+  @IsNotEmpty({ message: 'Provide the info if the user is active' })
+  @Min(0, { message: 'The user is active number cannot be negative' })
+  @Max(1, { message: 'The user is active number cannot exceed 1' })
+  @ApiProperty({
+    description:
+      'The user is a status to identify whether it represents whether it is active or not for use, example 0 for disabled and 1 for active',
+    required: true,
+    example: 1,
+  })
+  user_is_active!: number;
 }

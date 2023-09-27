@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build",
     "eslint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
-    "eslint:fix": "yarn eslint:check -- --fix",
+    "eslint:fix": "yarn eslint:check --fix",
     "lint": "yarn eslint:check && yarn prettier:check",
     "format": "prettier --write \"src/**/*.ts\"",
     "prettier:check": "prettier --check ./**/*.{ts,js,json,*rc}",
@@ -63,6 +63,7 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
+    "swagger-themes": "^1.2.30",
     "tough-cookie": "^4.1.2"
   },
   "devDependencies": {

@@ -40,9 +40,6 @@ jobs:
       - name: prisma generate schema
         run: yarn prisma generate --schema prisma/schema.prisma
 
-      - name: prisma generate schema1
-        run: yarn prisma generate --schema prisma/schema1.prisma
-
       - name: build
         run: yarn build
 
