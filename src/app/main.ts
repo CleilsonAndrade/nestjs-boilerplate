@@ -35,12 +35,12 @@ async function bootstrap(): Promise<void> {
     .toString('base64')}`;
 
   const theme = new SwaggerTheme('v3');
-  const darkStyle = theme.getBuffer('dark');
+  const darkStyle = theme.getBuffer('dark'); // Themes: 'classic', 'dark'
   const cssPath = fs
     .readFileSync(path.resolve(__dirname, 'docs', 'assets', 'swagger-ui.css'))
     .toString();
 
-  if (process.env.NODE_ENVIRONMENT === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     options = {
       swaggerOptions: {
         supportedSubmitMethods: [],
@@ -65,7 +65,7 @@ async function bootstrap(): Promise<void> {
         `https://raw.githubusercontent.com/nestjs/nest/master/LICENSE`,
       )
       .build();
-  } else if (process.env.NODE_ENVIRONMENT === 'development') {
+  } else if (process.env.NODE_ENV === 'development') {
     options = {
       customfavIcon: faviconPath,
       customCss: darkStyle + cssPath,

@@ -1,5 +1,5 @@
+import { PrismaService } from '@infra/database/prisma/prisma.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../database/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {

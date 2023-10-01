@@ -5,7 +5,7 @@
     //"rootDir": "./src",
     "baseUrl": "./",
     "outDir": "./dist",
-    "declaration": true,
+    "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -26,7 +26,12 @@
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@helpers/*": ["./src/app/helpers/*"],
+      "@infra/*": ["./src/app/infra/*"],
+      "@test/*": ["./test/*"]
+    }
   },
   "exclude": ["prisma"]
 }
