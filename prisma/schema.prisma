@@ -8,8 +8,11 @@ datasource db {
 }
 
 model user {
-  id             Int    @id @default(autoincrement())
-  user_name      String @unique
+  id             Int       @id @default(autoincrement())
+  user_name      String    @unique
   password       String
   user_is_active Int
+  createdAt      DateTime  @default(now())
+  updateAt       DateTime? @updatedAt
+  canceledAt     DateTime?
 }
