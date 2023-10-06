@@ -8,11 +8,8 @@ datasource db {
 }
 
 model user {
-  id             Int       @id @unique(map: "userID_UNIQUE") @default(autoincrement()) @db.UnsignedInt
-  user_name      String    @unique
+  id             Int    @id @default(autoincrement())
+  user_name      String @unique
   password       String
-  user_is_active Int       @db.UnsignedTinyInt
-  createdAt      DateTime  @default(now()) @map("createdAt")
-  updatedAt      DateTime? @map("updatedAt")
-  canceledAt     DateTime? @map("canceledAt")
+  user_is_active Int
 }

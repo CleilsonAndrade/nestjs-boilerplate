@@ -3,16 +3,16 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prismaServiceEX: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async validateUser(userId: number): Promise<any> {
     try {
-      const user = await this.prismaServiceEX.u_user.findUnique({
+      const user = await this.prismaService.user.findUnique({
         where: {
           id: userId,
         },
         select: {
-          username: true,
+          user_name: true,
         },
       });
 
