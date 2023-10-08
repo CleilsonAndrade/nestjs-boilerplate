@@ -99,7 +99,7 @@ async function bootstrap(): Promise<void> {
       .build();
   } else {
     throw new Error(
-      'Please set the environment to use: production or development',
+      'Please set the environment to use: "production" or "development"',
     );
   }
 
