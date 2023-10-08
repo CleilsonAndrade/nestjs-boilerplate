@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { HealthIndicator } from '@nestjs/terminus';
 import axios from 'axios';
 
 @Injectable()
 export class TokenHealthIndicator extends HealthIndicator {
+  constructor(private readonly configService: ConfigService) {
+    super();
+  }
+
   async checkTokenServiceHealth(): Promise<any> {
     try {
-      const username = process.env.JWT_TOKEN_USERNAME;
-      const password = process.env.JWT_TOKEN_PASSWORD;
-      const response = await axios.post(`localhost:3000/login`, {
+      const username = this.configService.get('JWT_TOKEN_USERNAME');
+      const password = this.configService.get('JWT_TOKEN_PASSWORD');
+      const baseURL = this.configService.get('JWT_BASE_URL_TOKEN');
+      // URL to get token via axios
+      const response = await axios.post(baseURL, {
         username,
         password,
       });

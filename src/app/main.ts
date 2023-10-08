@@ -1,4 +1,5 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -16,6 +17,10 @@ async function bootstrap(): Promise<void> {
     new FastifyAdapter(),
     { cors: true },
   );
+
+  const configService = app.get(ConfigService);
+  const NODE_ENV = configService.get('NODE_ENV');
+  const PORT = configService.get('PORT');
 
   let options;
 
@@ -40,7 +45,7 @@ async function bootstrap(): Promise<void> {
     .readFileSync(path.resolve(__dirname, 'docs', 'assets', 'swagger-ui.css'))
     .toString();
 
-  if (process.env.NODE_ENV === 'production') {
+  if (NODE_ENV === 'production') {
     options = {
       swaggerOptions: {
         supportedSubmitMethods: [],
@@ -65,7 +70,7 @@ async function bootstrap(): Promise<void> {
         `https://raw.githubusercontent.com/nestjs/nest/master/LICENSE`,
       )
       .build();
-  } else if (process.env.NODE_ENV === 'development') {
+  } else if (NODE_ENV === 'development') {
     options = {
       customfavIcon: faviconPath,
       customCss: darkStyle + cssPath,
@@ -102,7 +107,7 @@ async function bootstrap(): Promise<void> {
 
   SwaggerModule.setup('docs', app, document, options);
 
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  await app.listen(PORT ?? 3000, '0.0.0.0');
   console.log(`[🤖]: Application is running on: ${await app.getUrl()}`);
 }
 
