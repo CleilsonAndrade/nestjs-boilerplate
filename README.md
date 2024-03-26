@@ -84,6 +84,9 @@ Template inicial para projetos em [**NestJS**](https://nestjs.com/) com configur
   
   # Executar testes:
   $ yarn test:watch
+
+  # Utilizar a esteira para commits:
+  $ yarn commit
 ```
 
 # 📝 <span id="licença">Licença</span>
