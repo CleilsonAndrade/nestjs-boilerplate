@@ -25,10 +25,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard('jwt'))
 @ApiTags('User')
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -42,9 +42,9 @@ export class UserController {
     schema: {
       default: {
         id: 1,
-        user_name: 'johnD@e10',
+        username: 'johnD@e10',
         password: '12@#!10Aa',
-        user_is_active: 1,
+        userIsActive: 1,
         createdAt: '2023-08-31T12:00:58.723Z',
         updatedAt: null,
         canceledAt: null,
@@ -75,17 +75,8 @@ export class UserController {
     },
   })
   @Post()
-  async create(
-    @Body() createUserDto: CreateUserDto,
-    @Req() request: Request,
-  ): Promise<any> {
-    const authenticatedUser = request.user;
-
-    if (!authenticatedUser) {
-      throw new BadRequestException('Unauthenticated user');
-    }
-
-    return await this.userService.create(createUserDto, authenticatedUser);
+  async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+    return await this.userService.create(createUserDto);
   }
 
   @ApiOperation({
@@ -100,17 +91,17 @@ export class UserController {
       default: [
         {
           id: 1,
-          user_name: 'johnD@e10',
+          username: 'johnD@e10',
           password: '12@#!10Aa',
-          user_is_active: 1,
+          userIsActive: 1,
           createdAt: '2023-08-31T12:00:58.723Z',
           updatedAt: null,
           canceledAt: null,
         },
         {
           id: 2,
-          user_name: 'johnD@e20',
-          user_is_active: 1,
+          username: 'johnD@e20',
+          userIsActive: 1,
           createdAt: '2023-09-01T12:00:58.723Z',
           updatedAt: null,
           canceledAt: null,
@@ -153,6 +144,8 @@ export class UserController {
     description: 'How many users will be listed per page (e.g., 10)',
     example: '10',
   })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(
     @Query('skip') skip: string,
@@ -172,9 +165,9 @@ export class UserController {
     schema: {
       default: {
         id: 1,
-        user_name: 'johnD@e10',
+        username: 'johnD@e10',
         password: '12@#!10Aa',
-        user_is_active: 1,
+        userIsActive: 1,
         createdAt: '2023-08-31T12:00:58.723Z',
         updatedAt: null,
         canceledAt: null,
@@ -209,6 +202,8 @@ export class UserController {
     description: 'User ID (e.g., 1, 2, 3)',
     example: '1',
   })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<any> {
     return await this.userService.findOne(+id);
@@ -225,8 +220,8 @@ export class UserController {
     schema: {
       default: {
         id: 1,
-        user_name: 'D@e100',
-        user_is_active: 1,
+        username: 'D@e100',
+        userIsActive: 1,
         createdAt: '2023-08-31T12:00:58.723Z',
         updatedAt: '2023-09-08T12:00:58.723Z',
         canceledAt: null,
@@ -261,6 +256,8 @@ export class UserController {
     description: 'User ID (e.g., 1, 2, 3)',
     example: '1',
   })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -286,8 +283,8 @@ export class UserController {
     schema: {
       default: {
         id: 1,
-        user_name: 'D@e100',
-        user_is_active: 0,
+        username: 'D@e100',
+        userIsActive: 0,
         createdAt: '2023-08-31T12:00:58.723Z',
         updatedAt: '2023-09-08T12:00:58.723Z',
         canceledAt: '2023-09-15T12:00:58.723Z',
@@ -322,6 +319,8 @@ export class UserController {
     description: 'User ID (e.g., 1, 2, 3)',
     example: '1',
   })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() request: Request): Promise<any> {
     const authenticatedUser = request.user;

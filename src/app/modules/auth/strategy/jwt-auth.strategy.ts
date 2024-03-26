@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from '../auth.service';
-import { type JWTPayload } from '../dto/JWTPayload';
+import { type LoginDto } from '../dto/Login.dto';
 import { jwtConstants } from '../strategy/constants';
 
 @Injectable()
@@ -15,9 +15,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ id }: JWTPayload): Promise<any> {
+  async validate({ username, password }: LoginDto): Promise<any> {
     try {
-      const userPassport = await this.authService.validateUser(id);
+      const userPassport = await this.authService.validateUser(
+        username,
+        password,
+      );
 
       if (!userPassport) throw new Error('Not authorized');
 

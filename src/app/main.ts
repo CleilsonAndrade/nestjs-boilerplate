@@ -23,7 +23,6 @@ async function bootstrap(): Promise<void> {
   const PORT = configService.get('PORT');
 
   let options;
-
   let config;
 
   app.useGlobalPipes(
@@ -40,7 +39,7 @@ async function bootstrap(): Promise<void> {
     .toString('base64')}`;
 
   const theme = new SwaggerTheme('v3');
-  const darkStyle = theme.getBuffer('dark'); // Themes: 'classic', 'dark'
+  const themeStyle = theme.getBuffer('classic'); // Themes: 'classic', 'dark'
   const cssPath = fs
     .readFileSync(path.resolve(__dirname, 'docs', 'assets', 'swagger-ui.css'))
     .toString();
@@ -51,7 +50,7 @@ async function bootstrap(): Promise<void> {
         supportedSubmitMethods: [],
       },
       customfavIcon: faviconPath,
-      customCss: darkStyle + cssPath,
+      customCss: themeStyle + cssPath,
       customSiteTitle: 'NestJS - API Swagger UI',
     };
 
@@ -73,7 +72,7 @@ async function bootstrap(): Promise<void> {
   } else if (NODE_ENV === 'development') {
     options = {
       customfavIcon: faviconPath,
-      customCss: darkStyle + cssPath,
+      customCss: themeStyle + cssPath,
       customSiteTitle: 'NestJS - API Swagger UI',
     };
 

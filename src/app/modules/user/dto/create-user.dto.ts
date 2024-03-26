@@ -17,7 +17,7 @@ export class CreateUserDto {
     required: true,
     example: 'johnD@e10',
   })
-  user_name!: string;
+  username!: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Provide the valid password' })
@@ -39,5 +39,5 @@ export class CreateUserDto {
     required: true,
     example: 1,
   })
-  user_is_active!: number;
+  userIsActive!: number;
 }

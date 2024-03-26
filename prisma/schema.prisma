@@ -3,16 +3,16 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model user {
-  id             Int       @id @default(autoincrement())
-  user_name      String    @unique
-  password       String
-  user_is_active Int
-  createdAt      DateTime  @default(now())
-  updateAt       DateTime? @updatedAt
-  canceledAt     DateTime?
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
+  password     String
+  userIsActive Int
+  createdAt    DateTime  @default(now())
+  updateAt     DateTime?
+  canceledAt   DateTime?
 }

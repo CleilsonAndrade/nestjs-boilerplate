@@ -7,34 +7,24 @@ import type { UpdateUserDto } from './dto/update-user.dto';
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(
-    createUserDto: CreateUserDto,
-    user: Express.User | object,
-  ): Promise<any> {
+  async create(createUserDto: CreateUserDto): Promise<any> {
     try {
-      let username: string;
-      if ('username' in user) {
-        username = (user as { username: string }).username;
-      } else {
-        throw new Error('Invalid user');
-      }
-
       const create = await this.prismaService.user.create({
         data: {
-          user_name: createUserDto.user_name,
+          username: createUserDto.username,
           password: createUserDto.password,
-          user_is_active: 1,
+          userIsActive: 1,
         },
       });
 
-      return `This action adds a new user ${create.user_name} by ${username}`;
+      return `This action adds a new user ${create.username}`;
     } catch (error: any) {
       throw new BadRequestException(error.message);
     }
   }
 
   async findAll(take: number, skip: number): Promise<any> {
-    console.log(take, skip);
+    console.log('take: ', take, 'skip: ', skip);
     return `This action returns all user`;
   }
 
