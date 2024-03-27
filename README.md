@@ -70,7 +70,7 @@ Template inicial para projetos em [**NestJS**](https://nestjs.com/) com configur
   $ git clone https://github.com/CleilsonAndrade/nestjs-boilerplate.git
   $ cd ./nestjs-boilerplate
 
-   # Instalar as dependências:
+  # Instalar as dependências:
   $ yarn install
 
   # Gerar o código TypeScript com base nos modelos do Prisma:
