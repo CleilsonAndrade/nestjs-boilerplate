@@ -62,7 +62,7 @@ Template inicial para projetos em [**NestJS**](https://nestjs.com/) com configur
 | <kbd>GET /users/:id</kbd>     | Responsável por buscar usuário por seu id
 | <kbd>PATCH /users/:id</kbd>     | Responsável por atualizar as informações de um usuário por seu id
 | <kbd>DELETE /users/:id</kbd>     | Responsável por desabilitar um usuário por seu id
-| <kbd>GET /health/ </kbd>     | Responsável por utilizar o Terminus para consulta dos recursos de uso da API
+| <kbd>GET /health </kbd>     | Responsável por utilizar o Terminus para consulta dos recursos de uso da API
 
 # 🚀 <span id="instalação">Instalação</span>
 ```bash
