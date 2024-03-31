@@ -53,16 +53,16 @@ Template inicial para projetos em [**NestJS**](https://nestjs.com/) com configur
 - **Swagger themes**
 
 # 📍 <span id="endpoints">Endpoints</span>
-| Endpoint               | Resumo                                          
-|----------------------|-----------------------------------------------------
-| <kbd>GET / </kbd>     | Responsável por ser o endpoint inicial, nao autenticado
-| <kbd>GET /auth/login </kbd>     | Responsável por validar as credencias e gerar o token
-| <kbd>POST /users </kbd>     | Responsável por cadastrar o usuário, nao autenticado
-| <kbd>GET /users </kbd>     |   Responsável por listar todos os usuários com paginação
-| <kbd>GET /users/:id </kbd>     | Responsável por buscar usuário por seu id
-| <kbd>PATCH /users/:id </kbd>     | Responsável por atualizar as informações de um usuário por seu id
-| <kbd>DELETE /users/:id </kbd>     | Responsável por desabilitar um usuário por seu id
-| <kbd>GET /health </kbd>     | Responsável por utilizar o Terminus para consulta dos recursos de uso da API
+| Endpoint               | Resumo                                           | Autenticação
+|----------------------|------------------------------------------------------|----------------------
+| <kbd>GET / </kbd> | Responsável por ser o endpoint inicial | Não
+| <kbd>GET /auth/login </kbd> | Responsável por validar as credencias e gerar o token | Não
+| <kbd>POST /users </kbd> | Responsável por cadastrar o usuário| Não
+| <kbd>GET /users </kbd> | Responsável por listar todos os usuários com paginação | Sim
+| <kbd>GET /users/:id </kbd> | Responsável por buscar usuário, informando o ID | Sim
+| <kbd>PATCH /users/:id </kbd> | Responsável por atualizar as informações de um usuário, informando o ID | Sim
+| <kbd>DELETE /users/:id </kbd> | Responsável por desabilitar um usuário, informando o ID | Sim
+| <kbd>GET /health </kbd> | Responsável por utilizar o Terminus para consulta dos recursos de uso da API | Sim
 
 # 🚀 <span id="instalação">Instalação</span>
 ```bash
