@@ -56,7 +56,7 @@ Template inicial para projetos em [**NestJS**](https://nestjs.com/) com configur
 | Endpoint               | Resumo                                           | Autenticação
 |----------------------|------------------------------------------------------|----------------------
 | <kbd>GET / </kbd> | Responsável por ser o endpoint inicial | Não
-| <kbd>GET /auth/login </kbd> | Responsável por validar as credencias e gerar o token | Não
+| <kbd>GET /auth/login </kbd> | Responsável por autenticar o usuário, gerando o Bearer Token *JWT* | Sim
 | <kbd>POST /users </kbd> | Responsável por cadastrar o usuário| Não
 | <kbd>GET /users </kbd> | Responsável por listar todos os usuários com paginação | Sim
 | <kbd>GET /users/:id </kbd> | Responsável por buscar usuário, informando o ID | Sim
