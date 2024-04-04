@@ -92,7 +92,7 @@ async function bootstrap(): Promise<void> {
         'support@nestjs.com',
       )
       .setLicense(
-        'MIT',
+        'License',
         `https://raw.githubusercontent.com/CleilsonAndrade/nestjs-boilerplate/main/LICENSE`,
       )
       .setTermsOfService(
