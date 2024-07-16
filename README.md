@@ -1,6 +1,7 @@
 <div align="center">
   <h1>NestJS Boilerplate</h1>
   <p>Template para projetos em NestJS pré-configurado e permitindo que se concentrem no desenvolvimento de recursos específicos do aplicativo.</p>
+  <img src="./design/desktop.gif" alt="Logo" width="800">
 </div>
 
 # 📒 Índice
