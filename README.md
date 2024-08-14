@@ -54,17 +54,17 @@ Template inicial para projetos em [**NestJS**](https://nestjs.com/) pré-configu
 - **Swagger themes**
 
 # 📍 <span id="endpoints">Endpoints</span>
-| Endpoint               | Resumo                                           | Autenticação
-|----------------------|------------------------------------------------------|----------------------
-| <kbd>GET / </kbd> | Responsável por ser o endpoint inicial | Não
-| <kbd>GET /auth/login </kbd> | Responsável por autenticar o usuário, gerando o Bearer Token *JWT* | Sim
-| <kbd>POST /users </kbd> | Responsável por cadastrar o usuário| Não
-| <kbd>GET /users </kbd> | Responsável por listar todos os usuários com paginação | Sim
-| <kbd>GET /users/:id </kbd> | Responsável por buscar usuário, informando o ID | Sim
-| <kbd>PATCH /users/:id </kbd> | Responsável por atualizar as informações de um usuário, informando o ID | Sim
-| <kbd>DELETE /users/:id </kbd> | Responsável por desabilitar um usuário, informando o ID | Sim
-| <kbd>GET /health </kbd> | Responsável por utilizar o Terminus para consulta dos recursos de uso da API | Sim
-| <kbd>GET /docs </kbd> | Responsável por servir a documentação dos recursos da API |
+| Endpoint               | Resumo                                           | Autenticação               | Role
+|----------------------|------------------------------------------------------|--------------------------|----------------------
+| <kbd>GET / </kbd> | Responsável por ser o endpoint inicial | Não | *
+| <kbd>GET /auth/login </kbd> | Responsável por autenticar o usuário, gerando o Bearer Token *JWT* | Sim | *
+| <kbd>POST /users </kbd> | Responsável por cadastrar o usuário | Não | *
+| <kbd>GET /users </kbd> | Responsável por listar todos os usuários com paginação | Sim | *
+| <kbd>GET /users/:id </kbd> | Responsável por buscar usuário, informando o ID | Sim | *
+| <kbd>PATCH /users/:id </kbd> | Responsável por atualizar as informações de um usuário, informando o ID | Sim | *
+| <kbd>DELETE /users/:id </kbd> | Responsável por desabilitar um usuário, informando o ID | Sim | *
+| <kbd>GET /health </kbd> | Responsável por utilizar o Terminus para consulta dos recursos de uso da API | Sim | *
+| <kbd>GET /docs </kbd> | Responsável por servir a documentação dos recursos da API | Não | *
 
 # 🚀 <span id="instalação">Instalação</span>
 ```bash
